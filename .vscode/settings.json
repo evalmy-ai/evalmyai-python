@@ -1,0 +1,20 @@
+{
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/venv/*/**": true
+    },
+    "python.languageServer": "Pylance",
+    "ruff.lint.args": [
+        "--config=pyproject.toml"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+    },
+    "autoDocstring.docstringFormat": "google",
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+}
