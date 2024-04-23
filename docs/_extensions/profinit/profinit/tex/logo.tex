@@ -1,0 +1,16 @@
+\pagestyle{fancy}
+
+\fancyhead{} % clear all header fields
+\fancyfoot{} % clear all footer fields
+
+% Define headers and footers for regular pages
+\fancyhead[R]{\includegraphics[width=0.82cm]{logo-small.pdf}}
+\fancyfoot[C]{\thepage}
+
+% Redefine the plain page style to be used for the first page
+\fancypagestyle{plain}{
+  \fancyhead{} % clear all header fields
+  \fancyfoot{} % clear all footer fields
+  \fancyhead[R]{\includegraphics[width=4.5cm]{logo.pdf}}
+  \fancyfoot[C]{\thepage}
+}

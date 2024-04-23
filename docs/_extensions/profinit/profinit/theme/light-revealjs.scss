@@ -1,0 +1,16 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+
+h1.title, h2.title, h3.title, h4.title, p.subtitle {
+  color: $profinit_blue;
+}
+
+h1:not(.title), h2:not(.title), h3:not(.title), h4:not(.title) {
+  color: $profinit_blue;
+  font-style: normal;
+}
+
+.reveal .slide-logo {
+  max-height: 5rem !important;
+}

@@ -1,0 +1,7 @@
+.quarto-title-block .quarto-title-banner {
+  background-image: url(../img/logo.svg);
+  background-size: 250px;
+  background-repeat: no-repeat;
+  background-origin: content-box; 
+  background-position: 90% 50%;
+}

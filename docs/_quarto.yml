@@ -1,0 +1,40 @@
+project:
+  type: website
+
+website:
+  title: "evalmyai-client"
+  repo-url: https://git.profinit.eu/datascience/evalmyai/evalmyai-client
+  repo-branch: main
+  repo-subdir: docs
+
+  navbar:
+    search: true
+    tools:
+      - icon: git
+        url: https://git.profinit.eu/datascience/evalmyai/evalmyai-client
+    left:
+      - sidebar:users
+      - sidebar:developers
+
+
+  sidebar: 
+    - id: users
+      title: Users
+      style: docked
+      contents: 
+        - users/init.qmd
+    - id: developers
+      title: Developers
+      style: docked
+      contents:
+        - developers/init.qmd
+
+
+format:
+  profinit-html:
+    toc: true
+    title-block-banner: false
+    warning: false
+
+execute:
+  freeze: auto

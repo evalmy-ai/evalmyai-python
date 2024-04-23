@@ -1,0 +1,163 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+
+[project]
+name = "evalmyai_client"
+authors = [
+    {name = "Jan Palasek", email = "jan.palasek@profinit.eu"}
+]
+description = "Client library for LLM evaluator."
+version = "2.0.0a"
+requires-python = ">3.9"
+dependencies = [
+    "deprecated",
+    "langchain>0.0.344",
+    "langchain-openai",
+    "pydantic",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+ci = ["pip-tools", "pytest", "pytest-asyncio", "ruff", "pre-commit", "jupyter", "quartodoc", "mlflow", "metaflow", "s3fs", "seaborn", "profiplots", "fastapi", "python-jose[cryptography]", "uvicorn","psycopg2-binary","pyjwt","passlib","python-multipart"]
+docs = ["jupyter", "quartodoc"]
+web = ["fastapi", "mlflow", "python-jose[cryptography]", "uvicorn","psycopg2-binary","pyjwt","passlib","python-multipart"]
+
+
+[tool.pytest.ini_options]
+markers = """
+    unit: marks tests as unit.
+    integration: marks tests as integration.
+"""
+
+
+[tool.ruff]
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = [
+    # pyflakes
+    "F",
+    # pycodestyle
+    "E",
+    "W",
+    # isort
+    "I",
+    # pydocstyle 
+    # "D",
+    # pyupgrade 
+    # "UP",
+    # flake8-2020
+    "YTT",
+    # flake8-annotations
+    # "ANN",
+    # flake8-bandit: exec-builtin
+    "S102",
+    # flake8-bugbear
+    "B",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-future-annotations
+    "FA",
+    # implicit string concatenation
+    "ISC",
+    # flake8-logging-format
+    "G",
+    # flake8-pie
+    "PIE",
+    # flake8-pyi
+    "PYI",
+    # flake8-pytest-style
+    "PT",
+    # flake8-quotes
+    "Q",
+    # flake8-return
+    "RET",
+    # flake8-simplify
+    "SIM",
+    # flake8-tidy-imports
+    "TID",
+    # flake8-type-checking
+    "TCH",
+    # flake8-gettext
+    "INT",
+    # eradicate (commented-out code)
+    "ERA",
+    # pygrep-hooks
+    "PGH",
+    # pylint
+    "PL",
+    # NumPy-specific rules
+    "NPY",
+    # Perflint
+    "PERF",
+    # Ruff-specific rules
+    "RUF",
+]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+# Same as Black.
+line-length = 100
+
+target-version = "py311"
+
+[tool.ruff.lint]
+ignore = [
+    ### Intentionally disabled
+    # space before : (needed for how black formats slicing)
+    "E203",
+    # module level import not at top of file
+    "E402",
+    # do not assign a lambda expression, use a def
+    "E731",
+    # Line too long ({width} > {limit} characters)
+    "E501",
+    # controversial
+    "B006",
+    # controversial
+    "B008",
+    # zip() without an explicit strict= parameter
+    "B905",
+    # Too many arguments to function call
+    "PLR0913",
+    # Too many returns
+    "PLR0911",
+    # Too many branches
+    "PLR0912",
+    # Too many statements
+    "PLR0915",
+    # Redefined loop name
+    "PLW2901",
+    # Global statements are discouraged
+    "PLW0603",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["evalmyai_client"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

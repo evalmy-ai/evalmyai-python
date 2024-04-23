@@ -1,0 +1,36 @@
+version: 1.4.0
+quarto-required: ">=1.4.0"
+contributes:
+  formats:
+    html:
+      title-block-banner: white
+      title-block-banner-color: "#465A9B"
+      title-block-style: default
+      theme:
+        - default
+        - theme/light-common.scss
+        - theme/light-html.scss
+      css: 
+        - style/logo.css
+      csl: iso690-numeric-brackets-cs.csl
+    pdf:
+      pdf-engine: pdflatex
+      include-in-header: tex/header.tex
+      include-before-body: tex/logo.tex
+      format-resources:
+        - img/logo.pdf
+        - img/logo-small.pdf
+      csl: iso690-numeric-brackets-cs.csl
+      linkcolor: profinitBlue
+      urlcolor: profinitBlue
+    revealjs:
+      theme:
+        - default
+        - theme/light-common.scss
+        - theme/light-revealjs.scss
+      logo: img/logo.svg
+      css: style/revealjs-brackets-logo.css
+      csl: iso690-numeric-brackets-cs.csl
+    docx:
+      reference-doc: custom-reference-doc.docx
+      csl: iso690-numeric-brackets-cs.csl

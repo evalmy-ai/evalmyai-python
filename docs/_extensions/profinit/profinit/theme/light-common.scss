@@ -1,0 +1,52 @@
+/*-- scss:defaults --*/
+
+
+$profinit_red: #E63C41;
+$profinit_blue: #465A9B;
+$profinit_grey: #282828;
+
+$table_blue_darker: #DADEEB;
+$table_blue_lighter: #ECEEF5;
+$table_border: 2px;
+
+$link-color: $profinit_blue;
+$primary: $profinit_blue !default;
+
+$navbar-bg: $primary;
+
+/*-- scss:rules --*/
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.corporate-table table {
+  width: 100%;
+  border-collapse: collapse;
+  border: $table_border solid white;
+}
+
+.corporate-table thead {
+  background-color: $profinit_blue;
+  color: white;
+}
+
+.corporate-table tbody tr:nth-child(odd) {
+  background-color: $table_blue_darker;
+}
+
+.corporate-table tbody tr:nth-child(even) {
+  background-color: $table_blue_lighter;
+}
+
+.p-red {
+  color: $profinit_red;
+}
+
+.p-blue {
+  color: $profinit_blue;
+}
+
+.p-grey {
+  color: $profinit_grey;
+}
