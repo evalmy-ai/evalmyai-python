@@ -1,0 +1,37 @@
+{
+  "name": "A sample rag testcase",
+
+  "context": "Evaluate the answers to the school test. Be careful to factual clarity and particular numbers. Formulation and style is not relevant.",
+
+  "scoring": {
+    "contradictions": {
+      "name": "linear",
+      "params": {
+        "weights": {
+          "critical": 1,
+          "large": 0.5,
+          "small": 0.1,
+          "negligible": 0
+        }
+      }
+    }
+  },
+
+  "items": [
+    {
+      "context": "Question: What is the capital of France?",
+      "expected": "The capital of France is Paris",
+      "actual": "Paris."
+    },
+    {
+      "context": "Question: How long is Great Wall of China?",
+      "expected": "GWCh is more than 21 thousand kilometers long.",
+      "actual": "It is 13 thousand miles."
+    },
+    {
+      "context": "Question: How long was hundred years war?",
+      "expected": "116 years, 4 months, 3 weeks and 4 days.",
+      "actual": "A hundred years."
+    }
+  ]
+}
