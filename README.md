@@ -7,13 +7,13 @@ Python client library for [evalmy.ai](https://evalmy.ai).
 The evalmyai requires python 3.11 or higher.
 
 ```shell
-python -m pip install evalmyai 
+python -m pip install evalmyai-python 
 ```
 
 ## Simple usage
 
 ```python
-from src.evalmyai import Evaluator
+from evalmyai import Evaluator
 
 data = {
     "expected": "Jane is twelve.",
@@ -33,3 +33,12 @@ The result of the evaluation is as follows:
 
 ```
 
+## Contributing
+
+First create the Python environment.
+
+```sh
+python -m venv ".venv"
+source ./venv/bin/activate
+python -m pip install -r "requirements.txt" -e .
+```

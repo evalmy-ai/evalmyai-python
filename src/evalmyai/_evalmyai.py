@@ -2,7 +2,7 @@ import json
 
 import pandas as pd
 import requests
-from .validators import validate_single_input_data, validate_dict, validate_single_output_score, validate_test_case_data
+from evalmyai._validators import validate_single_input_data, validate_dict, validate_single_output_score, validate_test_case_data
 
 SYMBOLS = ["contradictions"]
 SYMBOLS_VERSION = {

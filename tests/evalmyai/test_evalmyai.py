@@ -3,9 +3,10 @@ import os
 
 import pandas as pd
 
-from src.evalmyai.evalmyai import Evaluator
+from evalmyai import Evaluator
 
 from dotenv import load_dotenv
+
 load_dotenv(dotenv_path='../../.env')
 
 auth = {

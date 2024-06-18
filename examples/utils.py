@@ -1,6 +1,6 @@
 import os
 
-from src.evalmyai.evalmyai import Evaluator
+from evalmyai._evalmyai import Evaluator
 
 from dotenv import load_dotenv
 load_dotenv(dotenv_path='../.env')
