@@ -8,7 +8,7 @@ package:
     GIT_STRATEGY: clone  # always clone fresh
     GIT_DEPTH: 0  # clone with all commits
   script:
-    - python -m pip install build twine .
+    - python -m pip install -r "requirements.txt" .
     - python -m build -sw
     - python -m twine upload dist/*
   only:
