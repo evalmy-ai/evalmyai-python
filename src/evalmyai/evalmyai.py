@@ -79,8 +79,6 @@ class Evaluator:
         :param data: a dictionary with textual keys "expected", "actual" and "context"
         :param symbols: a list of symbols to be evaluated
         :param scoring: the scoring criteria, if not set, defalt from self.scoring is used
-        :param retry_cnt: in case of a server error (e.g. gpt capacity issue), retry_cnt specifies how many
-        times to retry the evaluation
         :return: a dictionary with keys given by symbols and values by evaluated score
         """
 
