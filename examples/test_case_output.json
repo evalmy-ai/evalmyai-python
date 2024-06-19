@@ -9,7 +9,7 @@
                 "reasoning": {
                     "statements": [
                         {
-                            "reasoning": "Both <TEXT 1> and <TEXT 2> state that the capital of France is Paris, which is factually correct. There is no contradiction between the two texts as they both provide the same answer to the question regarding the capital of France. The difference in formulation, with <TEXT 1> providing a complete sentence and <TEXT 2> providing a one-word answer, does not affect the factual accuracy of the information. Since the context specifies that formulation and style are not relevant, and we are only concerned with factual clarity and particular numbers, there is no contradiction.",
+                            "reasoning": "Both <TEXT 1> and <TEXT 2> provide the correct answer to the question about the capital of France, which is Paris. There is no contradiction between the two texts as they both state the same fact, despite <TEXT 2> being more concise. The criterion for evaluation is factual clarity and particular numbers, and both texts meet this criterion with respect to the capital of France.",
                             "summary": "Both texts identify the capital of France correctly.",
                             "severity": "negligible"
                         }
@@ -26,8 +26,8 @@
                 "reasoning": {
                     "statements": [
                         {
-                            "reasoning": "The statement from <TEXT 1> claims that the Great Wall of China (GWCh) is more than 21 thousand kilometers long. However, <TEXT 2> states that it is 13 thousand miles long. To determine if there is a contradiction, we need to convert miles to kilometers or vice versa. Since 1 mile is approximately 1.60934 kilometers, 13 thousand miles would be approximately 20,921.42 kilometers. This conversion shows that the lengths provided in both texts are relatively close, with <TEXT 1> suggesting a slightly longer length than what the conversion of <TEXT 2> would suggest. Given the context of evaluating a school test where factual clarity and particular numbers are important, this difference is significant enough to be considered a contradiction. However, since the main informational value that the Great Wall is very long remains the same, and the numbers are not drastically different, the severity of this contradiction is small.",
-                            "summary": "Discrepancy in the length of the Great Wall of China.",
+                            "reasoning": "The statement from <TEXT 1> claims that the Great Wall of China (GWCh) is more than 21 thousand kilometers long. In <TEXT 2>, the length is given as 13 thousand miles. To determine if there is a contradiction, we need to convert miles to kilometers or vice versa. Since 1 mile is approximately 1.60934 kilometers, 13 thousand miles would be approximately 20,921.42 kilometers. The two lengths given are relatively close, with <TEXT 1> suggesting a slightly longer length than what the conversion of <TEXT 2> would suggest. However, the Great Wall of China is commonly cited as being approximately 21,196 kilometers long, which aligns more closely with <TEXT 1>. Given the context of evaluating a school test where factual clarity and particular numbers are important, this discrepancy in length is significant enough to be considered a contradiction. However, since both texts are attempting to convey that the Great Wall is very long and the numbers are not drastically different, the severity of this contradiction is small.",
+                            "summary": "Different lengths of the Great Wall of China are provided.",
                             "severity": "small"
                         }
                     ]
@@ -43,7 +43,7 @@
                 "reasoning": {
                     "statements": [
                         {
-                            "reasoning": "The statement from <TEXT 1> provides a precise duration of the Hundred Years' War as '116 years, 4 months, 3 weeks and 4 days,' which is factually accurate and aligns with historical records. In contrast, <TEXT 2> simplifies the duration to 'A hundred years,' which is factually incorrect and lacks the specificity required by the context of a school test that demands factual clarity and particular numbers. Given the context's emphasis on accuracy and detail, this constitutes a large contradiction because it is a significant error in a factual detail that is central to the question asked.",
+                            "reasoning": "According to <TEXT 1>, the Hundred Years' War lasted '116 years, 4 months, 3 weeks and 4 days,' which is a precise duration that exceeds a hundred years. In contrast, <TEXT 2> simplifies the duration to 'A hundred years,' which is factually incorrect when considering the specific length provided in <TEXT 1>. Given the context of evaluating school test answers where factual accuracy, especially regarding numbers, is crucial, this constitutes a large contradiction because it is a significant error in a factual detail that affects the correctness of the answer.",
                             "summary": "Difference in the duration of the Hundred Years' War",
                             "severity": "large"
                         }

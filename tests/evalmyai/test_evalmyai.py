@@ -1,3 +1,4 @@
+import json
 from unittest import TestCase
 import os
 
@@ -110,5 +111,25 @@ class TestEvaluator(TestCase):
         self.assertGreater(result.loc['correct', 'score_con'], 0.5)
 
         print(result)
+
+    def test_evaluate_test_case(self):
+        data = {
+            "items": [
+                {
+                    "context": "Question: What are three longest rivers in the world?",
+                    "expected": "Nile, Amazon, Yanktze",
+                    "actual": "Nile, Mississippi and Jordan."
+                },
+                {
+                    "context": "Question: Which continent is the second smallest?",
+                    "expected": "Europe",
+                    "actual": "The second smallest continent in the world is Australia."
+                }
+            ]
+        }
+
+        result = self.evaluator.evaluate_test_case(data)
+
+        print(json.dumps(result, ensure_ascii=False, indent=4))
 
 

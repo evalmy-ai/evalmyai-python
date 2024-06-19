@@ -45,7 +45,6 @@ STRUCT_TEST_CASE_DATA = {
     "items": [
         {
             "expected": "string",
-            "actual": "string"
         }
     ]
 }

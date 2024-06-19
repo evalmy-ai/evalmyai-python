@@ -20,18 +20,15 @@
   "items": [
     {
       "context": "Question: What is the capital of France?",
-      "expected": "The capital of France is Paris",
-      "actual": "Paris."
+      "expected": "The capital of France is Paris"
     },
     {
       "context": "Question: How long is Great Wall of China?",
-      "expected": "GWCh is more than 21 thousand kilometers long.",
-      "actual": "It is 13 thousand miles."
+      "expected": "GWCh is more than 21 thousand kilometers long."
     },
     {
       "context": "Question: How long was hundred years war?",
-      "expected": "116 years, 4 months, 3 weeks and 4 days.",
-      "actual": "A hundred years."
+      "expected": "116 years, 4 months, 3 weeks and 4 days."
     }
   ]
 }
