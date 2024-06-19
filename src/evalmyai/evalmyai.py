@@ -1,5 +1,6 @@
 import json
-
+import copy
+from collections.abc import Iterable
 import pandas as pd
 import requests
 from .validators import validate_single_input_data, validate_dict, validate_single_output_score, validate_test_case_data
@@ -43,10 +44,10 @@ class Evaluator:
 
             example Azure OpenAI:
             {
-                "api_key":          e.g.: "cd0...101",
-                "azure_endpoint":   e.g.: "https://...azure.com/"
-                "api_version":      e.g.: ""
-                "azure_deployment": e.g.: "2023-07-01-preview"
+                "api_key": str          e.g.: "cd0...101",
+                "azure_endpoint": str   e.g.: "https://...azure.com/"
+                "api_version": str      e.g.: "2023-07-01-preview"
+                "azure_deployment": str
             }
 
         :param token: evalmyai API token
@@ -54,7 +55,7 @@ class Evaluator:
         self.auth = auth
         self.token = token
 
-        self.scoring = DEFAULT_SCORING
+        self.scoring = copy.deepcopy(DEFAULT_SCORING)
 
     def set_scoring(self, symbol: str, scoring: dict) -> None:
         """
@@ -71,7 +72,7 @@ class Evaluator:
 
         self.scoring[symbol] = scoring
 
-    def evaluate(self, data: dict, symbols: list = SYMBOLS, scoring = None) -> dict:
+    def evaluate(self, data: dict, symbols: list = SYMBOLS, scoring: dict = None) -> dict:
         """
             Evaluates a single entry.
 
@@ -125,12 +126,13 @@ class Evaluator:
 
         return result
 
-    def evaluate_batch(self, data: list, symbols: list = SYMBOLS) -> list:
+    def evaluate_batch(self, data: list, symbols: list = SYMBOLS, scoring: dict = None) -> list:
         """
             Evaluates a list of entries.
 
         :param data: a list with entries for evaluate function
         :param symbols: a list of symbols to be evaluated
+        :param scoring: a scoring criteria, if not set, defalt from self.scoring is used
         :return: a tuple (results, errors) where *results* is a list of dictionaries with the scoring similar to single
         call of evaluate function or Nones if error happens and *errors* is a list of errors that happened during the
         evaluation or Nones if no error happens
@@ -141,7 +143,7 @@ class Evaluator:
 
         for entry in data:
             try:
-                res = self.evaluate(entry, symbols)
+                res = self.evaluate(entry, symbols, scoring)
                 result.append(res)
                 errors.append(None)
             except Exception as e:
@@ -150,13 +152,55 @@ class Evaluator:
 
         return result, errors
 
-    def evaluate_test_case(self, data: dict) -> str:
+    def evaluate_test_case(self, test_case: dict, actual_values: Iterable[str] = None) -> dict:
+        """
+        Evaluate a test case based on the provided test case data and actual values.
 
-        if not (v := validate_test_case_data(data))[0]:
+        The function validates the test case data and scoring format, applies the context to each item,
+        and evaluates each item using the provided actual values.
+
+        :param test_case: A dictionary containing the test case data. The expected structure is:
+            {
+                "context": str,   # Optional context for all items
+                "scoring": dict,  # Optional scoring criteria for symbols
+                "items": [
+                    {
+                        "expected": str,  # Expected result
+                        "actual": str,    # Actual result (optional if `actual_values` is provided)
+                        "context": str    # Optional context for this item
+                    },
+                    ...
+                ]
+            }
+
+        :param actual_values: An iterable of actual values to be used for the items in the test case.
+                              If an item does not have an "actual" key, values from this iterable will be used.
+
+        :return: A string representation of the evaluation results. The structure of the result is:
+            {
+                ... all non items filed found in test case are copied
+
+                "items": [
+                    {
+                        "expected": str,
+                        "actual": str,
+                        "context": str,  # If context was provided
+                        "symbol1": result,  # Result for symbol1
+                        "symbol2": result,  # Result for symbol2
+                        ...
+                        "error": str  # If an error occurred
+                    },
+                ]
+            }
+
+        :raises ValueError: If the input data format or scoring format is incorrect.
+        """
+
+        if not (v := validate_test_case_data(test_case))[0]:
             raise ValueError(f"Wrong input data format with msg: {v[1]}.")
 
-        if "scoring" in data:
-            scoring = data["scoring"]
+        if "scoring" in test_case:
+            scoring = test_case["scoring"]
             symbols = scoring.keys()
             for symbol in symbols:
                 if not (v := validate_dict(DEFAULT_SCORING[symbol], scoring[symbol]))[0]:
@@ -164,30 +208,44 @@ class Evaluator:
         else:
             symbols = SYMBOLS
 
-        context = data["context"] if "context" in data else ""
+        context = test_case["context"] if "context" in test_case else ""
 
-        result = dict()
+        act_iter = iter(actual_values) if actual_values else None
 
-        result["items"] = list()
+        result = {
+            "items": []
+        }
 
-        for item in data["items"]:
+        for item in test_case["items"]:
             if context:
                 item["context"] = context + ("\n" + item["context"]) if "context" in item else ""
 
+            if "actual" not in item:
+                actual = next(act_iter, None)
+                if actual:
+                    item["actual"] = actual
+            else:
+                actual = item["actual"]
+
             res_item = {
                 "expected": item["expected"],
-                "actual": item["actual"]
+                "actual": actual
             }
 
             if "context" in item:
                 res_item["context"] = item["context"]
 
-            try:
-                res = self.evaluate(item, symbols=symbols)
-                for symbol in res:
-                    res_item[symbol] = res[symbol]
-            except Exception as e:
-                res_item["error"] = res
+            if actual:
+
+                try:
+                    res = self.evaluate(item, symbols=symbols)
+                    for symbol in res:
+                        res_item[symbol] = res[symbol]
+                except Exception as e:
+                    res_item["error"] = str(e)
+
+            else:
+                res_item["error"] = "No actual value."
 
             result["items"].append(res_item)
 
@@ -195,20 +253,22 @@ class Evaluator:
 
     def evaluate_dataset(self, data: pd.DataFrame, symbols: list = SYMBOLS, context: str = '') -> pd.DataFrame:
         """
-
             Evaluates a whole pandas dataset.
 
-        :param data: a dataframe with string columns 'expected' and 'actual' and optionally 'context'
-        :param symbols: the list of symbols to evaluate
-        :param context: the general context to be preceded to the context of each row
-        :return: the result dataset with same index as the input dataset and columns:
-        - 'expected': str, same as in input dataset
-        - 'actual': str, same as in input dataset
-        - 'context': str, same as in input dataset if exists otherwise the context variable is used
-        - 'score_[sym]': float, the evaluated score value for every given symbol
-        - 'reason_[sym]': json, the reasoning for every given symbol. a json encoded dictionary
-        - 'errors': str, the list of errors during evaluation or None if no error happened
-        """
+            :param data: a dataframe with string columns 'expected' and 'actual' and optionally 'context'
+            :param symbols: the list of symbols to evaluate, defaults to evalmyai.SYMBOLS
+            :param context: the general context to be preceded to the context of each row, defaults to ''
+            :return: the result dataset with same index as the input dataset and columns:
+                - 'expected': str, same as in input dataset
+                - 'actual': str, same as in input dataset
+                - 'context': str, same as in input dataset if exists otherwise the context variable is used
+                - 'score_[sym]': float, the evaluated score value for every given symbol
+                - 'reason_[sym]': json, the reasoning for every given symbol, a JSON encoded dictionary
+                - 'error': str, the list of errors during evaluation or None if no error happened
+            :rtype: pd.DataFrame
+
+            :raises ValueError: if 'expected' or 'actual' columns are not found in the dataset
+            """
 
         if "expected" not in data.columns:
             raise ValueError("Column name 'expected' not found in the dataset.")
