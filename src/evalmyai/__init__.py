@@ -1,1 +1,5 @@
-__all__ = ["evalmyai"]
+from evalmyai._evalmyai import Evaluator
+
+__all__ = [
+    "Evaluator"
+]

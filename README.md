@@ -65,7 +65,7 @@ Reasoning: Different continents identified as the second smallest.
 The evalmyai requires python 3.11 or higher.
 
 ```shell
-python -m pip install evalmyai 
+python -m pip install evalmyai-python 
 ```
 
 ## Simple usage
@@ -359,7 +359,7 @@ DEFAULT_SCORING = {
 }
 ```
 
-Thus, a Score: 0 is achieved by just a single critical 
+Thus, score = 0 is achieved by just a single critical 
 contradiction, two large contradictions, or ten small 
 ones. Negligible contradictions do not affect the score 
 at all.

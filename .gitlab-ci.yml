@@ -1,0 +1,15 @@
+stages:
+  - release
+
+package:
+  stage: release
+  image: python:3.11.7
+  variables:
+    GIT_STRATEGY: clone  # always clone fresh
+    GIT_DEPTH: 0  # clone with all commits
+  script:
+    - python -m pip install -r "requirements.txt" .
+    - python -m build -sw
+    - python -m twine upload dist/*
+  only:
+    - tags

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.evalmyai.validators import validate_single_input_data, validate_single_output_score
+from evalmyai._validators import validate_single_input_data, validate_single_output_score
 
 
 class Test(TestCase):
