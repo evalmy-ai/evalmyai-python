@@ -1,93 +1,365 @@
-# evalmyai-client
+# EVALMY.AI
 
+Python client library for [EVALMY.AI](https://evalmy.ai), a public 
+service for evaluating GPT answers based on semantics.
 
+This service enables cost-effective, reliable, and 
+consistent automated testing of GenAI solutions like 
+RAGs and others. 
 
-## Getting started
+Using EVALMY.AI, you can accelerate your development 
+process, reduce testing costs and enhance the reliability 
+of your AI applications.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Example
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+You are developing a RAG (Retrieval-Augmented Generation) 
+to answer simple geographical questions. It's essential to 
+test its performance both during development and after 
+release to ensure the model maintains its accuracy. For 
+this purpose, you create a set of test questions along 
+with their respective correct answers.
 
 ```
-cd existing_repo
-git remote add origin https://git.profinit.eu/datascience/evalmyai/evalmyai-client.git
-git branch -M main
-git push -uf origin main
+1. What is the capital of France?               --> Paris
+2. What are three longest rivers in the world?  --> Nile, Amazon, Yanktze
+3. Which continent is the second smallest?      --> Europe
 ```
 
-## Integrate with your tools
+Your RAG provides following answers:
 
-- [ ] [Set up project integrations](https://git.profinit.eu/datascience/evalmyai/evalmyai-client/-/settings/integrations)
+```
+1. The capital of France is Paris.
+2. Nile, Mississippi and Amazon.
+3. The second smallest continent in the world is Australia.
+```
 
-## Collaborate with your team
+Pretty well but not yet perfect. 
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Reading through long sets of AI-generated answers can become 
+tedious and monotonous, especially if the test set remains 
+unchanged. This costs time and can lead to people making errors.
 
-## Test and Deploy
+Fortunately, AI can handle the task for us. With the help of 
+EVALMY.AI, simply send us the questions along with the expected 
+and actual answers, and you'll receive the results effortlessly.
 
-Use the built-in continuous integration in GitLab.
+```
+CONTRADICTIONS IN TEXTS:
+1. Score: 1.0, 
+Reasoning: "Both texts identify the capital of France correctly."
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+2. Score 0.5,
+Severity: Large
+Reasoning: "Different rivers listed as the three longest." 
 
-***
+3. Score 0.0, 
+Severity: Critical
+Reasoning: Different continents identified as the second smallest.
 
-# Editing this README
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
 
-## Suggestions for a good README
+## Instalation
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+The evalmyai requires python 3.11 or higher.
 
-## Name
-Choose a self-explaining name for your project.
+```shell
+python -m pip install evalmyai-python 
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Simple usage
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```python
+from evalmyai import Evaluator
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+data = {
+    "expected": "Jane is twelve.",
+    "actual": "Jane is 12 yrs, 7 mths and 3 days old."
+}
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+ev = Evaluator(...) # see authentication later
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+result = ev.evaluate(data)
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+print(result['contradictions'])
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+The result of the evaluation is as follows:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```json
+{
+    "score": 1.0,
+    "reasoning": {
+        "statements": [
+            {
+                "reasoning": "The statement from <TEXT 1> 'Jane is twelve' provides a general age for Jane, while <TEXT 2> 'Jane is 12 yrs, 7 mths and 3 days old' provides a more precise age. There is no contradiction between the two statements, as the second text simply provides more detail on Jane's age, but does not conflict with the first text's assertion that she is twelve years old. The criterion for severity in this context could be based on the impact of the age description on understanding Jane's age. Since both statements agree on Jane being twelve, the severity of the difference in description is negligible.",
+                "summary": "Slight difference in the description of Jane's age.",
+                "severity": "negligible"
+            }
+        ]
+    }
+}
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Authentication
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+First, you need your EVALMY.AI service token, which you can get [here](https://evalmy.ai).
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+The service runs on your own instance of GPT, either in Azure or directly on an OpenAI endpoint you provide.
 
-## License
-For open source projects, say how it is licensed.
+Due to capacity limits per organization, we cannot provide an GPT endpoint directly.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### Azure 
+
+If you use an Azure endpoint, the configuration should look like this:
+
+```python
+token = "YOUR_EVALMYAI_TOKEN"
+
+auth_azure = {
+    "api_key": "cd0...101",
+    "azure_endpoint": "https://...azure.com/",
+    "api_version": "2023-07-01-preview",
+    "azure_deployment": "...",
+}
+
+ev = Evaluator(auth_azure, token)
+```
+
+### OpenAI 
+
+In case you use OpenAI endpoint, the configuration should look like this:
+
+```python
+token = "YOUR_EVALMYAI_TOKEN"
+
+auth_open_ai = {
+    "api_key": "...",
+    "model": "gpt-4o" # select your model, we strongly recommend GPT-4.
+}
+
+ev = Evaluator(auth_azure, token)
+```
+
+## More Complex Usage
+
+### Context
+
+You can specify the context of the comparison, such as what 
+matters to you and what should be ignored.
+
+To do this, simply add the context into the input data 
+structure.
+
+```python
+data = {
+    "expected": "There are three apples, seven oranges, and one banana in the basket.",
+    "actual":   "In the basket there are thee apples, and four pears.",
+    "context":  "I am interested in the apples only, ignore all the other fruits."
+}
+```
+
+The result without any context:
+
+```json 
+{
+  "score": 0.5,
+  "reasoning": {
+    "statements": [
+      {
+        "reasoning": "The statement from <TEXT 1> lists 'three apples, seven oranges, and one banana' as the contents of the basket. In contrast, <TEXT 2> mentions 'three apples, and four pears' in the basket. There is a direct contradiction regarding the types of fruits and their quantities. <TEXT 1> does not mention pears at all, while <TEXT 2> does not mention the seven oranges and one banana from <TEXT 1>. This is a large contradiction because it involves a significant difference in the facts presented about the basket's contents, which changes the overall context or story of what is in the basket.", 
+        "summary": "Different fruits and quantities in the basket.", 
+        "severity": "large"
+      }
+    ]
+  }
+}
+```
+
+The result with context applied:
+
+```json 
+{
+  "score": 1.0,
+  "reasoning": {
+    "statements": [
+      {
+        "reasoning": "Both <TEXT 1> and <TEXT 2> state that there are three apples in the basket. Since the context specifies that only information about apples should be considered, the mention of other fruits in both texts is irrelevant. Therefore, there is no contradiction between the texts concerning the number of apples.", 
+        "summary": "No contradiction regarding apples.", 
+        "severity": "negligible"
+      }
+    ]
+  }
+}
+```
+
+### Batch Evaluation
+
+In real-world testing, it is practical to define a complete 
+test set containing multiple questions and answers. The 
+Evaluator class includes several convenient methods to 
+handle this for you.
+
+#### Simple python lists
+
+```python
+data = [
+   {
+      "expected": "Sunny.",
+      "actual": "Raining.",
+   },
+   {
+      "expected": "Cloudy.",
+      "actual": "Storm.",
+   }
+]
+
+results, errors = ev.evaluate_batch(data, context='Compare precipitation only. Ignore other weather traits.')
+```
+
+The *evaluate_batch* method returns a tuple of lists:
+
+- **results**: A list of evaluation results, with None values if an error occurs.
+- **errors**: A list of evaluation errors, with None values if no error occurs.
+
+#### Pandas dataset
+
+```python
+import pandas as pd
+
+df = pd.DataFrame({
+    "expected": ["We live in a best of worlds!"] * 3,
+    "actual": ["Life is great!", "Life has its ups and downs!", "Life is miserable!"]
+}, index=["optimist", "realist", "pessimist"])
+
+ev.evaluate_dataset(data)
+```
+
+he *evaluate_dataset* method returns a Pandas DataFrame 
+indexed by the same values as the input, with the following 
+columns:
+
+- **expected**: original expected values
+- **actual**: original actual values
+- **context**: context used for evaluation
+- **score_con**: contradiction score
+- **reason_con**: contradiction reasoning
+- **error**: evaluation error or None
+
+#### Whole test case defined in json
+
+It might be convenient to define the entire test scenario using a JSON file.
+
+```json
+{
+  "name": "A sample rag testcase",
+
+  "context": "Evaluate the answers to the school test. Be careful to factual clarity and particular numbers. Formulation and style is not relevant.",
+
+  "scoring": {
+    "contradictions": {
+      "name": "linear",
+      "params": {
+        "weights": {
+          "critical": 1,
+          "large": 0.5,
+          "small": 0.1,
+          "negligible": 0
+        }
+      }
+    }
+  },
+
+  "items": [
+    {
+      "context": "Question: What is the capital of France?",
+      "expected": "The capital of France is Paris",
+      "actual": "Paris."
+    },
+    {
+      "context": "Question: How long is Great Wall of China?",
+      "expected": "GWCh is more than 21 thousand kilometers long.",
+      "actual": "It is 13 thousand miles."
+    },
+    {
+      "context": "Question: How long was hundred years war?",
+      "expected": "116 years, 4 months, 3 weeks and 4 days.",
+      "actual": "A hundred years."
+    }
+  ]
+}
+```
+
+The scenario is evaluated by calling the *evaluate_test_case* method.
+
+```python
+with open('test_case_input.json') as fi:
+    test_case = json.load(fi)
+
+result = ev.evaluate_test_case(test_case=test_case)
+
+with open('test_case_output.json', 'w') as fo:
+    json.dump(result, fo, ensure_ascii=False, indent=4)
+```
+
+It is also possible to input the actual values directly into 
+the *evaluate_test_case* method, rather than including them 
+in the test scenario definition.
+
+```python
+values = ["Paris.", "It is 13 thousand miles.", "A hundred years."]
+result = ev.evaluate_test_case(test_case=test_case, actual_values=values)
+```
+
+### Scoring Parameters Definition
+
+Currently, *contradiction scoring* is implemented. Precision, recall, and F1 scores are in development.
+
+#### Contradiction Scoring
+
+The goal is to find, identify, and classify all contradictions in the compared texts.
+
+**Score: 1.0** means no contradiction in the texts.
+
+Every contradiction found in the texts is classified into one of four categories:
+
+**1. Critical** — Significantly changes the meaning of the text.
+  
+  - *John is older than Jane.* vs. *Jane is older than John.*
+
+**2. Large** — Major shift in the meaning of the text.
+
+  - *VW Golf is faster and cheaper than Toyota Corolla.* vs. *VW Golf is faster but more expensive than Toyota Corolla.*
+  
+**3. Small** — Minor shift in the meaning of the text.
+
+  - *I bought three books, seven envelopes, and a blue pen.* vs. *I bought three books, seven envelopes, and a blue pencil.*
+
+**4. Negligible** — Changes in text with minimal effect on the overall meaning.
+
+  - *Da Vinci's is a popular Italian restaurant serving pizza, pasta, and wine.* vs. *Da Vinci's is a famous Italian restaurant with great Italian foods and drinks.*
+
+The classification of contradictions can be altered by the context (see the Context section).
+
+For every contradiction found in the text, a penalty is applied. The penalty is defined in the scoring criteria with following default values:
+```python
+DEFAULT_SCORING = {
+    "contradictions": {
+        "name": "linear",
+        "params": {
+            "weights": {
+                "critical": 1,
+                "large": 0.5,
+                "small": 0.1,
+                "negligible": 0
+            }
+        }
+    }
+}
+```
+
+Thus, score = 0 is achieved by just a single critical 
+contradiction, two large contradictions, or ten small 
+ones. Negligible contradictions do not affect the score 
+at all.

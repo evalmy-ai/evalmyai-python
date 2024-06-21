@@ -1,0 +1,55 @@
+{
+    "items": [
+        {
+            "expected": "The capital of France is Paris",
+            "actual": "Paris.",
+            "context": "Evaluate the answers to the school test. Be careful to factual clarity and particular numbers. Formulation and style is not relevant.\nQuestion: What is the capital of France?",
+            "contradictions": {
+                "score": 1.0,
+                "reasoning": {
+                    "statements": [
+                        {
+                            "reasoning": "Both <TEXT 1> and <TEXT 2> provide the correct answer to the question about the capital of France, which is Paris. There is no contradiction between the two texts as they both state the same fact, despite <TEXT 2> being more concise. The criterion for evaluation is factual clarity and particular numbers, and both texts meet this criterion with respect to the capital of France.",
+                            "summary": "Both texts identify the capital of France correctly.",
+                            "severity": "negligible"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "expected": "GWCh is more than 21 thousand kilometers long.",
+            "actual": "It is 13 thousand miles.",
+            "context": "Evaluate the answers to the school test. Be careful to factual clarity and particular numbers. Formulation and style is not relevant.\nQuestion: How long is Great Wall of China?",
+            "contradictions": {
+                "score": 0.9,
+                "reasoning": {
+                    "statements": [
+                        {
+                            "reasoning": "The statement from <TEXT 1> claims that the Great Wall of China (GWCh) is more than 21 thousand kilometers long. In <TEXT 2>, the length is given as 13 thousand miles. To determine if there is a contradiction, we need to convert miles to kilometers or vice versa. Since 1 mile is approximately 1.60934 kilometers, 13 thousand miles would be approximately 20,921.42 kilometers. The two lengths given are relatively close, with <TEXT 1> suggesting a slightly longer length than what the conversion of <TEXT 2> would suggest. However, the Great Wall of China is commonly cited as being approximately 21,196 kilometers long, which aligns more closely with <TEXT 1>. Given the context of evaluating a school test where factual clarity and particular numbers are important, this discrepancy in length is significant enough to be considered a contradiction. However, since both texts are attempting to convey that the Great Wall is very long and the numbers are not drastically different, the severity of this contradiction is small.",
+                            "summary": "Different lengths of the Great Wall of China are provided.",
+                            "severity": "small"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "expected": "116 years, 4 months, 3 weeks and 4 days.",
+            "actual": "A hundred years.",
+            "context": "Evaluate the answers to the school test. Be careful to factual clarity and particular numbers. Formulation and style is not relevant.\nQuestion: How long was hundred years war?",
+            "contradictions": {
+                "score": 0.5,
+                "reasoning": {
+                    "statements": [
+                        {
+                            "reasoning": "According to <TEXT 1>, the Hundred Years' War lasted '116 years, 4 months, 3 weeks and 4 days,' which is a precise duration that exceeds a hundred years. In contrast, <TEXT 2> simplifies the duration to 'A hundred years,' which is factually incorrect when considering the specific length provided in <TEXT 1>. Given the context of evaluating school test answers where factual accuracy, especially regarding numbers, is crucial, this constitutes a large contradiction because it is a significant error in a factual detail that affects the correctness of the answer.",
+                            "summary": "Difference in the duration of the Hundred Years' War",
+                            "severity": "large"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
