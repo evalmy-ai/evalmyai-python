@@ -5,11 +5,22 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "evalmyai"
 description = "EVALMY.AI Python library"
-version = "0.1.0a0"
+readme = "README.md"
+version = "0.1.0a1"
 dependencies = [
     "requests",
     "pandas",
 ]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3"
+]
+
 
 [tool.setuptools.packages.find]
 where = ["src"]
