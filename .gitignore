@@ -223,3 +223,4 @@ docs/**/*.html
 docs/objects.json
 docs/api
 docs/_freeze
+.Rproj.user

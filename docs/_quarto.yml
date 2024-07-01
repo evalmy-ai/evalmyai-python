@@ -1,0 +1,104 @@
+project:
+  type: website
+
+metadata-files:
+  - api/_sidebar.yml
+
+quartodoc:
+  package: enalmyai
+  title: API
+  dir: api
+  sidebar: api/_sidebar.yml
+
+  sections:
+    - title: Base
+      contents:
+        - set_theme
+        - reset_theme
+        - set_style
+        - style_context
+        - name: color
+          children: separate
+    - title: Style
+      contents:
+        - style.grey
+        - style.greyscale
+        - style.bluescale
+        - style.colored
+        - style.grid
+        - style.spines
+        - style.ticks
+    - title: Profile
+      contents:
+        - profile.exploration
+        - profile.publish
+        - profile.presentation
+
+website:
+  title: "evalmyai"
+  repo-url: https://git.profinit.eu/datascience/sablony/evalmyai
+  repo-branch: main
+  repo-subdir: docs
+  back-to-top-navigation: true
+  page-navigation: true
+
+  navbar:
+    search: true
+    tools:
+      - icon: git
+        url: https://git.profinit.eu/datascience/sablony/evlamyai
+    left:
+      - sidebar:users
+      - text: Gallery
+        href: gallery/index.qmd
+      -
+        text: API
+        href: api/index.qmd
+      - text: Releases
+        file: release/index.qmd
+      - sidebar:developers
+
+  sidebar:
+    - id: users
+      title: Users
+      style: docked
+      contents:
+        - users/quickstart.qmd
+        - users/customization.qmd
+        - users/examples.qmd
+    - id: developers
+      title: Developers
+      style: docked
+      contents:
+        - developers/install.qmd
+        - developers/release.qmd
+    - id: gallery
+      title: Gallery
+      style: docked
+      contents:
+        - gallery/index.qmd
+        -
+          section: Bar
+          contents:
+            - gallery/vertical_bar.qmd
+            - gallery/horizontal_bar.qmd
+            - gallery/stacked_bar.qmd
+            - gallery/dodged_bar.qmd
+        -
+          section: Scatter
+          contents:
+            - gallery/scatter.qmd
+            - gallery/scatter_w_highlight_text.qmd
+            - gallery/scatter_w_fitted_line.qmd
+        - gallery/kde.qmd
+        - gallery/slope.qmd
+        - gallery/facet.qmd
+
+format:
+  profinit-html:
+    toc: true
+    title-block-banner: false
+    warning: false
+
+execute:
+  freeze: auto
