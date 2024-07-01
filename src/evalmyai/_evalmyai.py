@@ -11,7 +11,7 @@ SYMBOLS_VERSION = {
 }
 
 # the web address of the evalmy.ai web services
-URL_HOST = "https://dsk4hmhgxqrrr.cloudfront.net"
+URL_HOST = "https://evalmy.ai"
 URL_API = f"{URL_HOST}/api"
 URL_EVAL = f"{URL_API}/symbol/evaluate"
 
