@@ -23,19 +23,13 @@ pages:
     # Check Quarto
     - quarto check
   script:
-    - cd docs/ && quartodoc build && quarto render . && cd ..
+    - cd docs/ && quarto render . && cd ..
     - mv docs/_site public
   artifacts:
     paths:
       - public
-  rules:
-    # run automatically for TAGs
-    - if: '$CI_COMMIT_TAG'
-      when: always
-    # can be run manually for 'main' branch (this is for hotfixes, e.g. docs doesn't work)
-    - if: '$CI_COMMIT_REF_NAME == "main"'
-      when: manual
-    - when: never
+  only:
+    - main
 
 package:
   stage: release
