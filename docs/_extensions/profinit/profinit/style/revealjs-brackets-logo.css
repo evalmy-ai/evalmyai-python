@@ -1,0 +1,34 @@
+/* custom.css */
+.reveal {
+    position: relative; /* Ensures pseudo-elements are positioned relative to this container */
+}
+
+.reveal::before {
+    content: ""; /* Required for the pseudo-element to be generated */
+    position: absolute;
+    top: 60%;
+    right: 0;
+    width: 30%;
+    height: 30%;
+    background-image: url('../img/revealjs-right-bracket.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: right;
+}
+
+.reveal::after {
+    content: ""; /* Required for the pseudo-element to be generated */
+    position: absolute;
+    top: 10%;
+    left: 0; /* This will position the second logo at the left side of the screen */
+    width: 20%;
+    height: 20%;
+    background-image: url('../img/revealjs-left-bracket.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: left;
+}
+
+.slide-background {
+    background-color: transparent;
+}

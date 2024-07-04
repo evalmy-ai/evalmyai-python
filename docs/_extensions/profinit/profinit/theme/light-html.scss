@@ -1,0 +1,13 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+
+h1, h2, h3, h4, p.subtitle {
+    color: $profinit_blue;
+}
+
+@media only screen and (max-width: 1000px) {
+    .quarto-title-block .quarto-title-banner {
+        background-image: none;
+    }
+}

@@ -1,0 +1,66 @@
+---
+title: "EVALMY.AI"
+format:
+    profinit-html:
+        toc: false
+editor: visual
+---
+
+Python client library for [EVALMY.AI](https://evalmy.ai), a public
+service for evaluating GPT answers based on semantics.
+
+This service enables cost-effective, reliable, and
+consistent automated testing of GenAI solutions like
+RAGs and others.
+
+Using EVALMY.AI, you can accelerate your development
+process, reduce testing costs and enhance the reliability
+of your AI applications.
+
+### Example
+
+You are developing a RAG (Retrieval-Augmented Generation)
+to answer simple geographical questions. It's essential to
+test its performance both during development and after
+release to ensure the model maintains its accuracy. For
+this purpose, you create a set of test questions along
+with their respective correct answers.
+
+```
+1. What is the capital of France?               --> Paris
+2. What are three longest rivers in the world?  --> Nile, Amazon, Yanktze
+3. Which continent is the second smallest?      --> Europe
+```
+
+Your RAG provides following answers:
+
+```
+1. The capital of France is Paris.
+2. Nile, Mississippi and Amazon.
+3. The second smallest continent in the world is Australia.
+```
+
+Pretty well but not yet perfect.
+
+Reading through long sets of AI-generated answers can become
+tedious and monotonous, especially if the test set remains
+unchanged. This costs time and can lead to people making errors.
+
+Fortunately, AI can handle the task for us. With the help of
+EVALMY.AI, simply send us the questions along with the expected
+and actual answers, and you'll receive the results effortlessly.
+
+```
+CONTRADICTIONS IN TEXTS:
+1. Score: 1.0,
+Reasoning: "Both texts identify the capital of France correctly."
+
+2. Score 0.5,
+Severity: Large
+Reasoning: "Different rivers listed as the three longest."
+
+3. Score 0.0,
+Severity: Critical
+Reasoning: Different continents identified as the second smallest.
+
+```

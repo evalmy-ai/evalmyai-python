@@ -1,0 +1,55 @@
+---
+title: "Scoring criteria"
+format:
+    profinit-html:
+        toc: false
+editor: visual
+---
+
+Currently, *contradiction scoring* is implemented. Precision, recall, and F1 scores are in development.
+
+## Contradiction Scoring
+
+The goal is to find, identify, and classify all contradictions in the compared texts.
+
+**Score: 1.0** means **no contradiction** in the texts.
+
+For every contradiction found in the texts a **penalty** is applied. The size of the penalty is proportional to the severity of the contradiction.
+
+There are four severity categories:
+
+1. **Critical** — Significantly changes the meaning of the text. 
+2. **Large** — Major shift in the meaning of the text. 
+3. **Small** — Minor shift in the meaning of the text. 
+4. **Negligible** — Changes in text with minimal effect on the overall meaning.
+
+| Severity      |  Expected       | Actual               |
+|---------------|-----------------|----------------------|
+| Critical      | John is older than Jane. | Jane is older than John.                                  |
+| Large         | VW Golf is faster and cheaper than Toyota Corolla.  | VW Golf is faster but more expensive than Toyota Corolla. |
+| Small         | I bought three books, seven envelopes, and a blue pen.                     | I bought three books, seven envelopes, and a blue pencil.                      |                                                           |
+| Negligible         | Da Vinci's is a popular Italian restaurant serving pizza, pasta, and wine. | Da Vinci's is a famous Italian restaurant with great Italian foods and drinks. |                                                           |
+
+: Examples of contradiction severity
+
+The classification of contradictions can be significantly altered by the context (see the Context section).
+
+For every contradiction found in the text, a penalty is applied. The penalty is defined in the scoring criteria with following default values:
+
+``` python
+DEFAULT_SCORING = {
+    "contradictions": {
+        "name": "linear",
+        "params": {
+            "weights": {
+                "critical": 1,
+                "large": 0.5,
+                "small": 0.1,
+                "negligible": 0
+            }
+        }
+    }
+}
+```
+
+Thus, **score = 0** is achieved by just one critical contradiction, two large contradictions, or ten small ones. Negligible contradictions do not affect the score at all.

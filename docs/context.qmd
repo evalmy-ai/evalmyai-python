@@ -1,0 +1,57 @@
+---
+title: "Context"
+format:
+    profinit-html:
+        toc: false
+editor: visual
+---
+
+## Context specification
+
+You can specify the context of the text comparison, such as what matters to you 
+the most and what could rather be ignored.
+
+To do this, simply add the context into the input data structure.
+
+```python
+data = {
+    "expected": "There are three apples, seven oranges, and one banana in the basket.",
+    "actual":   "In the basket there are thee apples, and four pears.",
+    "context":  "I am interested in the apples only, ignore all the other fruits."
+}
+```
+
+The result without any context:
+
+```json 
+{
+  "score": 0.5,
+  "reasoning": {
+    "statements": [
+      {
+        "reasoning": "The statement from <TEXT 1> lists 'three apples, seven oranges, and one banana' as the contents of the basket. In contrast, <TEXT 2> mentions 'three apples, and four pears' in the basket. There is a direct contradiction regarding the types of fruits and their quantities. <TEXT 1> does not mention pears at all, while <TEXT 2> does not mention the seven oranges and one banana from <TEXT 1>. This is a large contradiction because it involves a significant difference in the facts presented about the basket's contents, which changes the overall context or story of what is in the basket.", 
+        "summary": "Different fruits and quantities in the basket.", 
+        "severity": "large"
+      }
+    ]
+  }
+}
+```
+
+The result with context applied:
+
+```json 
+{
+  "score": 1.0,
+  "reasoning": {
+    "statements": [
+      {
+        "reasoning": "Both <TEXT 1> and <TEXT 2> state that there are three apples in the basket. Since the context specifies that only information about apples should be considered, the mention of other fruits in both texts is irrelevant. Therefore, there is no contradiction between the texts concerning the number of apples.", 
+        "summary": "No contradiction regarding apples.", 
+        "severity": "negligible"
+      }
+    ]
+  }
+}
+```
+

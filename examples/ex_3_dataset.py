@@ -13,7 +13,7 @@ dataset = pd.DataFrame({"expected": expected, "actual": actual}, index=index)
 
 print(dataset)
 
-result = evaluator.evaluate_dataset(dataset)
+result = evaluator.evaluate_dataset(dataset, context="Compare the statements regarding their expected life outcomes.")
 
 print(result[['score_con', 'reason_con']])
 print(result['reason_con'])
