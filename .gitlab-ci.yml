@@ -1,6 +1,42 @@
 stages:
   - release
 
+variables:
+  QUARTO_VERSION: 1.5.53
+
+pages:
+  stage: release
+  image: python:3.11.7
+  before_script:
+    # Download and install Quarto
+    - mkdir -p /opt/quarto/${QUARTO_VERSION}
+    - | 
+      curl -o quarto.tar.gz \
+        -L "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.tar.gz"
+    - |
+      tar -zxvf quarto.tar.gz \
+        -C "/opt/quarto/${QUARTO_VERSION}" \
+        --strip-components=1
+    - rm quarto.tar.gz
+    - ln -s /opt/quarto/${QUARTO_VERSION}/bin/quarto /usr/local/bin/quarto
+    - quarto install tinytex
+    # Check Quarto
+    - quarto check
+  script:
+    - cd docs/ && quartodoc build && quarto render . && cd ..
+    - mv docs/_site public
+  artifacts:
+    paths:
+      - public
+  rules:
+    # run automatically for TAGs
+    - if: '$CI_COMMIT_TAG'
+      when: always
+    # can be run manually for 'main' branch (this is for hotfixes, e.g. docs doesn't work)
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+      when: manual
+    - when: never
+
 package:
   stage: release
   image: python:3.11.7

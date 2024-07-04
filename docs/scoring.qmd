@@ -1,6 +1,8 @@
 ---
 title: "Scoring criteria"
-format: html
+format:
+    profinit-html:
+        toc: false
 editor: visual
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "Context"
-format: html
+format:
+    profinit-html:
+        toc: false
 editor: visual
 ---
 
