@@ -1,0 +1,87 @@
+---
+title: "First steps"
+format: html
+editor: visual
+---
+
+## Instalation
+
+The evalmyai requires python 3.8 or higher.
+
+```shell
+python -m pip install evalmyai-python
+```
+
+## Simple usage
+
+```python
+from evalmyai import Evaluator
+
+data = {
+    "expected": "Jane is twelve.",
+    "actual": "Jane is 12 yrs, 7 mths and 3 days old."
+}
+
+evaluator = Evaluator(...) # see authentication later
+
+result = evaluator.evaluate(data)
+
+print(result['contradictions'])
+```
+
+The result of the evaluation is as follows:
+
+```json
+{
+    "score": 1.0,
+    "reasoning": {
+        "statements": [
+            {
+                "reasoning": "The statement from <TEXT 1> 'Jane is twelve' provides a general age for Jane, while <TEXT 2> 'Jane is 12 yrs, 7 mths and 3 days old' provides a more precise age. There is no contradiction between the two statements, as the second text simply provides more detail on Jane's age, but does not conflict with the first text's assertion that she is twelve years old. The criterion for severity in this context could be based on the impact of the age description on understanding Jane's age. Since both statements agree on Jane being twelve, the severity of the difference in description is negligible.",
+                "summary": "Slight difference in the description of Jane's age.",
+                "severity": "negligible"
+            }
+        ]
+    }
+}
+```
+
+## Authentication
+
+First, you need your EVALMY.AI service token, which you can get [here](https://evalmy.ai).
+
+The service runs on your own instance of GPT, either in Azure or directly on an OpenAI endpoint you provide.
+
+Due to capacity limits per organization, we cannot provide an GPT endpoint directly.
+
+### Azure
+
+If you use an Azure endpoint, the configuration should look like this:
+
+```python
+token = "YOUR_EVALMYAI_TOKEN"
+
+auth_azure = {
+    "api_key": "cd0...101",
+    "azure_endpoint": "https://...azure.com/",
+    "api_version": "2023-07-01-preview",
+    "azure_deployment": "...",
+}
+
+evaluator = Evaluator(auth_azure, token)
+```
+
+### OpenAI
+
+In case you use OpenAI endpoint, the configuration should look like this:
+
+```python
+token = "YOUR_EVALMYAI_TOKEN"
+
+auth_open_ai = {
+    "api_key": "...",
+    "model": "gpt-4o" # select your model, we strongly recommend GPT-4.
+}
+
+evaluator = Evaluator(auth_azure, token)
+```

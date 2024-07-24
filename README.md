@@ -62,7 +62,7 @@ Reasoning: Different continents identified as the second smallest.
 
 ## Instalation
 
-The evalmyai requires python 3.11 or higher.
+The evalmyai requires python 3.8 or higher.
 
 ```shell
 python -m pip install evalmyai-python 
@@ -142,6 +142,6 @@ auth_open_ai = {
 ev = Evaluator(auth_azure, token)
 ```
 
-The EVLAMY.AI tutorial with practical exmaples can be found [here]().
+The EVLAMY.AI tutorial with practical exmaples can be found [here](https://datascience.profinitservices.cz/evalmyai/evalmyai-client/).
 
 
