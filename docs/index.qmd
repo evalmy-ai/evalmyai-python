@@ -7,7 +7,8 @@ editor: visual
 ---
 
 Python client library for [EVALMY.AI](https://evalmy.ai), a public
-service for evaluating GPT answers based on semantics.
+service for evaluating GPT answers based on semantics i.e. the true
+meaning of the answers.
 
 This service enables cost-effective, reliable, and
 consistent automated testing of GenAI solutions like
