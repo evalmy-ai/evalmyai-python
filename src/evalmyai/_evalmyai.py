@@ -252,6 +252,12 @@ class Evaluator:
                     res = self.evaluate(item, symbols=symbols, retry_cnt=retry_cnt)
                     for symbol in res:
                         res_item[symbol] = res[symbol]
+                except requests.exceptions.HTTPError as e:
+                    res_item["error"] = {
+                        "code": e.response.status_code,
+                        "text": str(e),
+                        "detail": json.loads(e.response.text)["detail"]
+                    }
                 except Exception as e:
                     res_item["error"] = str(e)
 
@@ -304,6 +310,11 @@ class Evaluator:
                     scores[symbol].append(res[symbol]['score'])
                     reasons[symbol].append(res[symbol]['reasoning'])
                 errors.append(None)
+            except requests.exceptions.HTTPError as e:
+                for symbol in symbols:
+                    scores[symbol].append(float('nan'))
+                    reasons[symbol].append('')
+                errors.append(str(e) + '\n' + e.response.text)
             except Exception as e:
                 for symbol in symbols:
                     scores[symbol].append(float('nan'))

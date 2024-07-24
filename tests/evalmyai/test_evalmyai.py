@@ -4,7 +4,7 @@ import os
 
 import pandas as pd
 
-from evalmyai import Evaluator
+from evalmyai._evalmyai import Evaluator
 
 from dotenv import load_dotenv
 
@@ -113,6 +113,24 @@ class TestEvaluator(TestCase):
 
         print(result)
 
+    def test_evaluate_dataset_with_error(self):
+
+        data = pd.DataFrame(data={
+            "expected": ["Nehoří!"],
+            "actual": ["Hoří!"]
+        }, index=['wrong'])
+
+        _auth = auth.copy()
+        _auth['api_key'] = 'abcd'
+        evaluator = Evaluator(_auth, token)
+        result = evaluator.evaluate_dataset(data)
+        self.assertTrue(result['error'].values[0].startswith('429'))
+
+        _token = 'abcd'
+        evaluator = Evaluator(auth, _token)
+        result = evaluator.evaluate_dataset(data)
+        self.assertTrue(result['error'].values[0].startswith('401'))
+
     def test_evaluate_test_case(self):
         data = {
             "items": [
@@ -133,4 +151,20 @@ class TestEvaluator(TestCase):
 
         print(json.dumps(result, ensure_ascii=False, indent=4))
 
+    def test_evaluate_test_case_error(self):
+        data = {
+            "items": [
+                {
+                    "context": "Question: What are three longest rivers in the world?",
+                    "expected": "Nile, Amazon, Yanktze",
+                    "actual": "Nile, Mississippi and Jordan."
+                }
+            ]
+        }
+
+        _token = 'abcd'
+        evaluator = Evaluator(auth, _token)
+        result = evaluator.evaluate_test_case(data)
+
+        print(json.dumps(result, ensure_ascii=False, indent=4))
 
