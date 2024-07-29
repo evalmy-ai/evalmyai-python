@@ -1,9 +1,11 @@
 import json
 import copy
+from collections import OrderedDict
 from collections.abc import Iterable
 import pandas as pd
 import requests
 from evalmyai._validators import validate_single_input_data, validate_dict, validate_single_output_score, validate_test_case_data
+from evalmyai._utils import order_output_dict, order_contradictions
 
 SYMBOLS = ["contradictions"]
 SYMBOLS_VERSION = {
@@ -160,7 +162,7 @@ class Evaluator:
 
         return result, errors
 
-    def evaluate_test_case(self, test_case: dict, actual_values: Iterable[str] = None, retry_cnt: int = 1) -> dict:
+    def evaluate_test_case(self, test_case: dict, actual_values: Iterable[str] = None, retry_cnt: int = 1) -> OrderedDict:
         """
         Evaluate a test case based on the provided test case data and actual values.
 
@@ -223,9 +225,12 @@ class Evaluator:
 
         act_iter = iter(actual_values) if actual_values else None
 
-        result = {
-            "items": []
-        }
+        result = OrderedDict()
+
+        if "name" in test_case:
+            result["name"] = test_case["name"]
+
+        result["items"] = []
 
         for item in test_case["items"]:
             if context:
@@ -238,13 +243,13 @@ class Evaluator:
             else:
                 actual = item["actual"]
 
-            res_item = {
-                "expected": item["expected"],
-                "actual": actual
-            }
+            res_item = OrderedDict()
 
             if "context" in item:
                 res_item["context"] = item["context"]
+
+            res_item["expected"] = item["expected"]
+            res_item["actual"] = item["actual"]
 
             if actual:
 
@@ -253,11 +258,8 @@ class Evaluator:
                     for symbol in res:
                         res_item[symbol] = res[symbol]
                 except requests.exceptions.HTTPError as e:
-                    res_item["error"] = {
-                        "code": e.response.status_code,
-                        "text": str(e),
-                        "detail": json.loads(e.response.text)["detail"]
-                    }
+                    res_item["error"] = OrderedDict(
+                        code=e.response.status_code, text=str(e), detail=json.loads(e.response.text)["detail"])
                 except Exception as e:
                     res_item["error"] = str(e)
 
