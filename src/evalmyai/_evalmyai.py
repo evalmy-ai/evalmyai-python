@@ -1,9 +1,11 @@
 import json
 import copy
+from collections import OrderedDict
 from collections.abc import Iterable
 import pandas as pd
 import requests
 from evalmyai._validators import validate_single_input_data, validate_dict, validate_single_output_score, validate_test_case_data
+from evalmyai._utils import order_output_dict, order_contradictions
 
 SYMBOLS = ["contradictions"]
 SYMBOLS_VERSION = {
@@ -72,7 +74,7 @@ class Evaluator:
 
         self.scoring[symbol] = scoring
 
-    def evaluate(self, data: dict, symbols: list = SYMBOLS, scoring: dict = None, retry_cnt: int = 1) -> dict:
+    def evaluate(self, data: dict, symbols: list = SYMBOLS, scoring: dict = None, retry_cnt: int = 1) -> OrderedDict:
         """
             Evaluates a single entry.
 
@@ -94,7 +96,7 @@ class Evaluator:
         if not set(symbols) <= set(SYMBOLS):
             raise ValueError(f"Wrong symbols value. Should be subset of {SYMBOLS}")
 
-        result = dict()
+        result = OrderedDict()
 
         for symbol in symbols:
             task = {
@@ -121,7 +123,7 @@ class Evaluator:
 
                     res["reasoning"] = json.loads(res["reasoning"])
                     del res["call_outputs"]
-                    result[symbol] = res
+                    result[symbol] = order_output_dict(res, order_contradictions)
                     break
 
                 elif i == retry_cnt - 1:
@@ -160,7 +162,7 @@ class Evaluator:
 
         return result, errors
 
-    def evaluate_test_case(self, test_case: dict, actual_values: Iterable[str] = None, retry_cnt: int = 1) -> dict:
+    def evaluate_test_case(self, test_case: dict, actual_values: Iterable[str] = None, retry_cnt: int = 1) -> OrderedDict:
         """
         Evaluate a test case based on the provided test case data and actual values.
 
@@ -189,7 +191,7 @@ class Evaluator:
 
         :return: A string representation of the evaluation results. The structure of the result is:
             {
-                ... all non items filed found in test case are copied
+                ... all non items filed found in test case are copied first
 
                 "items": [
                     {
@@ -223,9 +225,13 @@ class Evaluator:
 
         act_iter = iter(actual_values) if actual_values else None
 
-        result = {
-            "items": []
-        }
+        result = OrderedDict()
+
+        for key in test_case:
+            if key != "items":
+                result[key] = copy.deepcopy(test_case[key])
+
+        result["items"] = []
 
         for item in test_case["items"]:
             if context:
@@ -238,26 +244,23 @@ class Evaluator:
             else:
                 actual = item["actual"]
 
-            res_item = {
-                "expected": item["expected"],
-                "actual": actual
-            }
+            res_item = OrderedDict()
 
             if "context" in item:
                 res_item["context"] = item["context"]
+
+            res_item["expected"] = item["expected"]
+            res_item["actual"] = item["actual"]
 
             if actual:
 
                 try:
                     res = self.evaluate(item, symbols=symbols, retry_cnt=retry_cnt)
                     for symbol in res:
-                        res_item[symbol] = res[symbol]
+                        res_item[symbol] = order_output_dict(res[symbol], order_contradictions)
                 except requests.exceptions.HTTPError as e:
-                    res_item["error"] = {
-                        "code": e.response.status_code,
-                        "text": str(e),
-                        "detail": json.loads(e.response.text)["detail"]
-                    }
+                    res_item["error"] = OrderedDict(
+                        code=e.response.status_code, text=str(e), detail=json.loads(e.response.text)["detail"])
                 except Exception as e:
                     res_item["error"] = str(e)
 
