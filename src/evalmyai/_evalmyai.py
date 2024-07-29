@@ -74,7 +74,7 @@ class Evaluator:
 
         self.scoring[symbol] = scoring
 
-    def evaluate(self, data: dict, symbols: list = SYMBOLS, scoring: dict = None, retry_cnt: int = 1) -> dict:
+    def evaluate(self, data: dict, symbols: list = SYMBOLS, scoring: dict = None, retry_cnt: int = 1) -> OrderedDict:
         """
             Evaluates a single entry.
 
@@ -96,7 +96,7 @@ class Evaluator:
         if not set(symbols) <= set(SYMBOLS):
             raise ValueError(f"Wrong symbols value. Should be subset of {SYMBOLS}")
 
-        result = dict()
+        result = OrderedDict()
 
         for symbol in symbols:
             task = {
@@ -123,7 +123,7 @@ class Evaluator:
 
                     res["reasoning"] = json.loads(res["reasoning"])
                     del res["call_outputs"]
-                    result[symbol] = res
+                    result[symbol] = order_output_dict(res, order_contradictions)
                     break
 
                 elif i == retry_cnt - 1:
@@ -256,7 +256,7 @@ class Evaluator:
                 try:
                     res = self.evaluate(item, symbols=symbols, retry_cnt=retry_cnt)
                     for symbol in res:
-                        res_item[symbol] = res[symbol]
+                        res_item[symbol] = order_output_dict(res[symbol], order_contradictions)
                 except requests.exceptions.HTTPError as e:
                     res_item["error"] = OrderedDict(
                         code=e.response.status_code, text=str(e), detail=json.loads(e.response.text)["detail"])
