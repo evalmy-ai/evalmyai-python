@@ -6,7 +6,7 @@ format:
 editor: visual
 ---
 
-Currently, *contradiction scoring* is implemented. Precision, recall, and F1 scores are in development.
+Currently, *contradiction scoring* is implemented. *Precision*, *recall*, and *F1* scores are under development.
 
 ## Contradiction Scoring
 
@@ -52,4 +52,4 @@ DEFAULT_SCORING = {
 }
 ```
 
-Thus, **score = 0** is achieved by just one critical contradiction, two large contradictions, or ten small ones. Negligible contradictions do not affect the score at all.
+Thus, **score = 0.0** is achieved by just one critical contradiction, two large contradictions, or ten small ones. Negligible contradictions do not affect the score at all.

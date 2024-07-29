@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "evalmyai"
 description = "EVALMY.AI Python library"
 readme = "README.md"
-version = "0.1.0a1"
+version = "0.1.0a3"
 dependencies = [
     "requests",
     "pandas",

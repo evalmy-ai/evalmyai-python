@@ -13,6 +13,7 @@ website:
     style: docked
     search: true
     contents:
+      - first_steps.qmd
       - context.qmd
       - scoring.qmd
       - batch.qmd
