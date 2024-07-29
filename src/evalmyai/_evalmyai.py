@@ -191,7 +191,7 @@ class Evaluator:
 
         :return: A string representation of the evaluation results. The structure of the result is:
             {
-                ... all non items filed found in test case are copied
+                ... all non items filed found in test case are copied first
 
                 "items": [
                     {
@@ -227,8 +227,9 @@ class Evaluator:
 
         result = OrderedDict()
 
-        if "name" in test_case:
-            result["name"] = test_case["name"]
+        for key in test_case:
+            if key != "items":
+                result[key] = copy.deepcopy(test_case[key])
 
         result["items"] = []
 
