@@ -9,15 +9,47 @@ website:
   back-to-top-navigation: true
   page-navigation: true
 
-  sidebar:
-    style: docked
+  navbar:
     search: true
-    contents:
-      - first_steps.qmd
-      - context.qmd
-      - scoring.qmd
-      - batch.qmd
+    tools:
+      - icon: git
+        url: https://github.com/evalmy-ai/evalmyai-python
+    left:
+      - sidebar:start
+      -
+        text: API
+        href: api/index.qmd
 
+  sidebar:
+    - id: start
+      title: Get started
+      style: docked
+      contents: 
+        - first_steps.qmd
+        - context.qmd
+        - scoring.qmd
+        - batch.qmd
+
+metadata-files:
+  - api/_sidebar.yml
+  
+quartodoc:
+  package: evalmyai
+  dir: api
+  title: API
+  parser: google
+
+  sections:
+    - title: Classes
+      contents:
+        - Evaluator
+    - title: Evaluator
+      contents:
+        - Evaluator.set_scoring
+        - Evaluator.evaluate
+        - Evaluator.evaluate_batch
+        - Evaluator.evaluate_test_case
+        - Evaluator.evaluate_dataset
 
 format:
   profinit-html:
