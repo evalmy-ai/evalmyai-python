@@ -15,7 +15,7 @@ from evalmyai._utils import order_output_dict, order_contradictions
 SYMBOLS = ["contradictions"]
 SYMBOLS_VERSION = {"contradictions": "1"}
 
-# the web address of the evalmy.ai web services
+# The web address of the evalmy.ai web services.
 URL_HOST = "https://evalmy.ai"
 URL_API = f"{URL_HOST}/api"
 URL_EVAL = f"{URL_API}/symbol/evaluate"
@@ -33,36 +33,42 @@ DEFAULT_SCORING = {
 class Evaluator:
     def __init__(self, auth: dict, token: str):
         """
-        :param auth: either OpenAI or Azure OpenAI authentication
+        Initializes the Evaluator class with authentication and API token.
 
-            example OpenAI:
-            {
-                "api_key": e.g.: "cd0...101",
-                "model":   e.g.: "gpt-4o",
-            }
+        Args:
+            auth (dict): Authentication details, either for OpenAI or Azure OpenAI.
 
-            example Azure OpenAI:
-            {
-                "api_key": str          e.g.: "cd0...101",
-                "azure_endpoint": str   e.g.: "https://...azure.com/"
-                "api_version": str      e.g.: "2023-07-01-preview"
-                "azure_deployment": str
-            }
+                Example OpenAI:
+                {
+                    "api_key": str,       # Example: "cd0...101"
+                    "model": str,         # Example: "gpt-4o"
+                }
 
-        :param token: evalmyai API token
+                Example Azure OpenAI:
+                {
+                    "api_key": str,          # Example: "cd0...101"
+                    "azure_endpoint": str,   # Example: "https://...azure.com/"
+                    "api_version": str,      # Example: "2023-07-01-preview"
+                    "azure_deployment": str,
+                }
+
+            token (str): evalmyai API token.
         """
         self.auth = auth
         self.token = token
-
         self.scoring = copy.deepcopy(DEFAULT_SCORING)
 
     def set_scoring(self, symbol: str, scoring: dict) -> None:
         """
-            Sets the scoring criteria for a specified symbol.
-        :param symbol: the symbol which scoring is to be replaced
-        :param scoring: the scoring criteria. see self.scoring for default values.
-        """
+        Sets the scoring criteria for a specified symbol.
 
+        Args:
+            symbol (str): The symbol for which scoring is to be replaced.
+            scoring (dict): The scoring criteria. See `self.scoring` for default values.
+
+        Raises:
+            ValueError: If the symbol is not in SYMBOLS or the scoring format is invalid.
+        """
         if symbol not in SYMBOLS:
             raise ValueError(f"Wrong symbol: {symbol}, one of {SYMBOLS} expected.")
 
@@ -79,14 +85,20 @@ class Evaluator:
         retry_cnt: int = 1,
     ) -> OrderedDict:
         """
-            Evaluates a single entry.
+        Evaluates a single entry.
 
-        :param data: a dictionary with textual keys "expected", "actual" and "context"
-        :param symbols: a list of symbols to be evaluated
-        :param scoring: the scoring criteria, if not set, defalt from self.scoring is used
-        :return: a dictionary with keys given by symbols and values by evaluated score
+        Args:
+            data (dict): A dictionary with textual keys "expected", "actual", and "context".
+            symbols (list, optional): A list of symbols to be evaluated. Defaults to SYMBOLS.
+            scoring (dict, optional): The scoring criteria. If not set, default from `self.scoring` is used.
+            retry_cnt (int, optional): Number of times to retry evaluation in case of server errors. Defaults to 1.
+
+        Returns:
+            OrderedDict: A dictionary with keys given by symbols and values by evaluated score.
+
+        Raises:
+            ValueError: If input data or symbols are invalid, or if the output format is incorrect.
         """
-
         if "context" not in data:
             data["context"] = ""
 
@@ -107,7 +119,7 @@ class Evaluator:
                 "scoring": scoring[symbol],
                 "aggregation": {
                     "n_calls": 1,
-                    "agg_method": "mean"
+                    "agg_method": "mean",
                 },
                 "auth": self.auth,
                 "api_token": self.token,
@@ -147,18 +159,19 @@ class Evaluator:
         retry_cnt: int = 1,
     ) -> list:
         """
-            Evaluates a list of entries.
+        Evaluates a list of entries.
 
-        :param data: a list with entries for evaluate function
-        :param symbols: a list of symbols to be evaluated
-        :param scoring: a scoring criteria, if not set, defalt from self.scoring is used
-        :param retry_cnt: in case of a server error (e.g. gpt capacity issue), retry_cnt specifies how many
-        times to retry the evaluation of s single entry, default is 1
-        :return: a tuple (results, errors) where *results* is a list of dictionaries with the scoring similar to single
-        call of evaluate function or Nones if error happens and *errors* is a list of errors that happened during the
-        evaluation or Nones if no error happens
+        Args:
+            data (list): A list with entries for the `evaluate` function.
+            symbols (list, optional): A list of symbols to be evaluated. Defaults to SYMBOLS.
+            scoring (dict, optional): Scoring criteria. If not set, default from `self.scoring` is used.
+            retry_cnt (int, optional): Number of times to retry evaluation in case of server errors. Defaults to 1.
+
+        Returns:
+            list: A tuple (results, errors) where `results` is a list of dictionaries with the scoring similar to
+                  a single call of `evaluate` function or `None` if an error occurs, and `errors` is a list of
+                  errors that occurred during evaluation or `None` if no error occurs.
         """
-
         result = list()
         errors = list()
 
@@ -179,49 +192,49 @@ class Evaluator:
         self, test_case: dict, actual_values: Iterable[str] = None, retry_cnt: int = 1
     ) -> OrderedDict:
         """
-        Evaluate a test case based on the provided test case data and actual values.
+        Evaluates a test case based on the provided test case data and actual values.
 
-        The function validates the test case data and scoring format, applies the context to each item,
+        Validates the test case data and scoring format, applies the context to each item,
         and evaluates each item using the provided actual values.
 
-        :param test_case: A dictionary containing the test case data. The expected structure is:
-            {
-                "context": str,   # Optional context for all items
-                "scoring": dict,  # Optional scoring criteria for symbols
-                "items": [
-                    {
-                        "expected": str,  # Expected result
-                        "actual": str,    # Actual result (optional if `actual_values` is provided)
-                        "context": str    # Optional context for this item
-                    },
-                    ...
-                ]
-            }
-
-        :param actual_values: An iterable of actual values to be used for the items in the test case.
-                              If an item does not have an "actual" key, values from this iterable will be used.
-
-        :param retry_cnt: in case of a server error (e.g. gpt capacity issue), retry_cnt specifies how many
-        times to retry the evaluation of s single entry, default is 1
-
-        :return: A string representation of the evaluation results. The structure of the result is:
-            {
-                ... all non items filed found in test case are copied first
-
-                "items": [
-                    {
-                        "expected": str,
-                        "actual": str,
-                        "context": str,  # If context was provided
-                        "symbol1": result,  # Result for symbol1
-                        "symbol2": result,  # Result for symbol2
+        Args:
+            test_case: A dictionary containing the test case data. The expected structure is:
+                {
+                    "context": str,  # Optional context for all items.
+                    "scoring": dict,  # Optional scoring criteria for symbols.
+                    "items": [
+                        {
+                            "expected": str,  # Expected result.
+                            "actual": str,    # Actual result (optional if `actual_values` is provided).
+                            "context": str    # Optional context for this item.
+                        },
                         ...
-                        "error": str  # If an error occurred
-                    },
-                ]
-            }
+                    ]
+                }
+            actual_values: An iterable of actual values to be used for the items in the test case. If an item
+                does not have an "actual" key, values from this iterable will be used.
+            retry_cnt: The number of times to retry the evaluation of a single entry in case of a server error
+                (e.g., GPT capacity issue). Default is 1.
 
-        :raises ValueError: If the input data format or scoring format is incorrect.
+        Returns:
+            An OrderedDict representing the evaluation results. The structure of the result is:
+                {
+                    ... all non-items fields found in test_case are copied first,
+                    "items": [
+                        {
+                            "expected": str,
+                            "actual": str,
+                            "context": str,  # If context was provided.
+                            "symbol1": result,  # Result for symbol1.
+                            "symbol2": result,  # Result for symbol2.
+                            ...
+                            "error": str  # If an error occurred.
+                        },
+                    ]
+                }
+
+        Raises:
+            ValueError: If the input data format or scoring format is incorrect.
         """
 
         if not (v := validate_test_case_data(test_case))[0]:
@@ -231,7 +244,9 @@ class Evaluator:
             scoring = test_case["scoring"]
             symbols = scoring.keys()
             for symbol in symbols:
-                if not (v := validate_dict(DEFAULT_SCORING[symbol], scoring[symbol]))[0]:
+                if not (v := validate_dict(DEFAULT_SCORING[symbol], scoring[symbol]))[
+                    0
+                ]:
                     raise ValueError(f"Wrong scoring format with msg: {v[1]}.")
         else:
             symbols = SYMBOLS
@@ -300,23 +315,27 @@ class Evaluator:
         retry_cnt: int = 1,
     ) -> pd.DataFrame:
         """
-        Evaluates a whole pandas dataset.
+        Evaluates an entire pandas DataFrame dataset.
 
-        :param data: a dataframe with string columns 'expected' and 'actual' and optionally 'context'
-        :param symbols: the list of symbols to evaluate, defaults to evalmyai.SYMBOLS
-        :param context: the general context to be preceded to the context of each row, defaults to ''
-        :param retry_cnt: in case of a server error (e.g. gpt capacity issue), retry_cnt specifies how many
-        times to retry the evaluation of s single entry, default is 1
-        :return: the result dataset with same index as the input dataset and columns:
-            - 'expected': str, same as in input dataset
-            - 'actual': str, same as in input dataset
-            - 'context': str, same as in input dataset if exists otherwise the context variable is used
-            - 'score_[sym]': float, the evaluated score value for every given symbol
-            - 'reason_[sym]': json, the reasoning for every given symbol, a JSON encoded dictionary
-            - 'error': str, the list of errors during evaluation or None if no error happened
-        :rtype: pd.DataFrame
+        Args:
+            data: A DataFrame with string columns 'expected' and 'actual', and optionally 'context'.
+            symbols: A list of symbols to evaluate, defaults to SYMBOLS.
+            context: A general context to precede the context of each row, defaults to an empty string.
+            retry_cnt: The number of times to retry the evaluation of a single entry in case of a server error
+                (e.g., GPT capacity issue). Default is 1.
 
-        :raises ValueError: if 'expected' or 'actual' columns are not found in the dataset
+        Returns:
+            pd.DataFrame: A DataFrame containing the evaluation results. The output DataFrame has the same index as
+            the input DataFrame and includes the following columns:
+                - 'expected': str, same as in the input dataset.
+                - 'actual': str, same as in the input dataset.
+                - 'context': str, same as in the input dataset if exists, otherwise the context variable is used.
+                - 'score_[sym]': float, the evaluated score value for each given symbol.
+                - 'reason_[sym]': json, the reasoning for each given symbol, a JSON-encoded dictionary.
+                - 'error': str, the list of errors during evaluation, or None if no error occurred.
+
+        Raises:
+            ValueError: If 'expected' or 'actual' columns are not found in the dataset.
         """
 
         if "expected" not in data.columns:

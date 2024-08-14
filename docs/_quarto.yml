@@ -36,6 +36,7 @@ metadata-files:
 quartodoc:
   package: evalmyai
   dir: api
+  sidebar: api/_sidebar.yml
   title: API
   parser: google
 
