@@ -31,29 +31,26 @@ DEFAULT_SCORING = {
 
 
 class Evaluator:
+    """
+    Initializes the Evaluator class with authentication and API token.
+
+    Args:
+        auth (dict): Authentication details, either for OpenAI or Azure OpenAI.
+            Example OpenAI:
+            {
+                "api_key": str,       # Example: "cd0...101"
+                "model": str,         # Example: "gpt-4o"
+            }
+            Example Azure OpenAI:
+            {
+                "api_key": str,          # Example: "cd0...101"
+                "azure_endpoint": str,   # Example: "https://...azure.com/"
+                "api_version": str,      # Example: "2023-07-01-preview"
+                "azure_deployment": str,
+            }
+        token (str): evalmyai API token.
+    """
     def __init__(self, auth: dict, token: str):
-        """
-        Initializes the Evaluator class with authentication and API token.
-
-        Args:
-            auth (dict): Authentication details, either for OpenAI or Azure OpenAI.
-
-                Example OpenAI:
-                {
-                    "api_key": str,       # Example: "cd0...101"
-                    "model": str,         # Example: "gpt-4o"
-                }
-
-                Example Azure OpenAI:
-                {
-                    "api_key": str,          # Example: "cd0...101"
-                    "azure_endpoint": str,   # Example: "https://...azure.com/"
-                    "api_version": str,      # Example: "2023-07-01-preview"
-                    "azure_deployment": str,
-                }
-
-            token (str): evalmyai API token.
-        """
         self.auth = auth
         self.token = token
         self.scoring = copy.deepcopy(DEFAULT_SCORING)
