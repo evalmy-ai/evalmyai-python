@@ -1,5 +1,8 @@
 from unittest import TestCase
-from evalmyai._validators import validate_single_input_data, validate_single_output_score
+from evalmyai._validators import (
+    validate_single_input_data,
+    validate_single_output_score,
+)
 
 
 class Test(TestCase):
@@ -32,7 +35,6 @@ class Test(TestCase):
         self.assertEqual(False, res[0])
         print(res[1])
 
-
     correct_scoring = {
         "contradictions": {
             "score": 1.0,
@@ -44,7 +46,7 @@ class Test(TestCase):
                         "severity": "negligible"
                     }
                 ]
-            }
+            },
         }
     }
 
@@ -59,7 +61,7 @@ class Test(TestCase):
                         "severity": "major"
                     }
                 ]
-            }
+            },
         }
     }
 
@@ -79,10 +81,9 @@ class Test(TestCase):
                         "severity": 17
                     }
                 ]
-            }
+            },
         }
     }
-
 
     def test_validate_single_output_score(self):
         res = validate_single_output_score(Test.correct_scoring)
@@ -94,6 +95,3 @@ class Test(TestCase):
         res = validate_single_output_score(Test.wrong_scoring_2)
         self.assertEqual(False, res[0])
         print(res[1])
-
-
-

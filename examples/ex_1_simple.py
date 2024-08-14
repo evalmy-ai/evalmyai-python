@@ -10,10 +10,10 @@ data = {
 
 result = evaluator.evaluate(data=data)
 
-res_con = result['contradictions']
+res_con = result["contradictions"]
 
 print(f"Score: {res_con['score']}")
 
 print(f"Reasoning: {res_con['reasoning']}")
 
-print(json.dumps(result['contradictions'], indent=4))
+print(json.dumps(result["contradictions"], indent=4))

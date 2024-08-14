@@ -11,7 +11,7 @@ data = {
 
 print(data)
 
-result = evaluator.evaluate(data=data)['contradictions']
+result = evaluator.evaluate(data=data)["contradictions"]
 
 print(f"Score: {result['score']}")
 
@@ -27,9 +27,8 @@ data = {
 
 print(data)
 
-result = evaluator.evaluate(data=data)['contradictions']
+result = evaluator.evaluate(data=data)["contradictions"]
 
 print(f"Score: {result['score']}")
 
 print(f"Reasoning: {result['reasoning']}")
-
