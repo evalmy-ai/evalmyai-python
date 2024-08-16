@@ -139,7 +139,7 @@ auth_open_ai = {
     "model": "gpt-4o" # select your model, we strongly recommend GPT-4.
 }
 
-ev = Evaluator(auth_azure, token)
+ev = Evaluator(auth_open_ai, token)
 ```
 
 The EVLAMY.AI tutorial with practical exmaples can be found [here](https://datascience.profinitservices.cz/evalmyai/evalmyai-client/).

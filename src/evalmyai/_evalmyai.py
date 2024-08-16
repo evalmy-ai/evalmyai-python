@@ -32,23 +32,40 @@ DEFAULT_SCORING = {
 
 class Evaluator:
     """
-    Initializes the Evaluator class with authentication and API token.
+    Initializes the Evaluator class to evaluate AI model outputs with evalmyai. See [evalmyai-python](https://github.com/evalmy-ai/evalmyai-python).
 
     Args:
-        auth (dict): Authentication details, either for OpenAI or Azure OpenAI.
-            Example OpenAI:
-            {
-                "api_key": str,       # Example: "cd0...101"
-                "model": str,         # Example: "gpt-4o"
-            }
-            Example Azure OpenAI:
-            {
-                "api_key": str,          # Example: "cd0...101"
-                "azure_endpoint": str,   # Example: "https://...azure.com/"
-                "api_version": str,      # Example: "2023-07-01-preview"
-                "azure_deployment": str,
-            }
+        auth (dict): Authentication details, either for OpenAI or Azure OpenAI. See [examples](#examples).
         token (str): evalmyai API token.
+    Examples
+    --------
+    
+    ### OpenAI Example:
+    ```{python}
+    from evalmyai import Evaluator
+
+    token = "YOUR_EVALMYAI_TOKEN"
+    auth_open_ai = {  
+        "api_key": "cd0...101",
+        "model": "gpt-4o", 
+    }
+    ev = Evaluator(auth_open_ai, token)
+    ```
+
+    ### Azure OpenAI Example:
+    ```{python}
+    from evalmyai import Evaluator
+
+    token = "YOUR_EVALMYAI_TOKEN"
+    auth_azure = {
+                "api_key": "cd0...101",
+                "azure_endpoint": "https://...azure.com/",
+                "api_version": "2023-07-01-preview",
+                "azure_deployment": "...",
+    }
+    ev = Evaluator(auth_azure, token)
+    ```
+
     """
     def __init__(self, auth: dict, token: str):
         self.auth = auth

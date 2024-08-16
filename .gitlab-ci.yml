@@ -22,7 +22,7 @@ pages:
     - quarto install tinytex
     # Check Quarto
     - quarto check
-    - python -m pip install quartodoc
+    - python -m pip install quartodoc jupyter
     - python -m pip install .
   script:
     - cd docs/ && quartodoc build && quarto render . && cd ..
