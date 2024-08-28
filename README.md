@@ -65,7 +65,7 @@ Reasoning: Different continents identified as the second smallest.
 The evalmyai requires python 3.8 or higher.
 
 ```shell
-python -m pip install evalmyai-python 
+python -m pip install evalmyai 
 ```
 
 ## Simple usage

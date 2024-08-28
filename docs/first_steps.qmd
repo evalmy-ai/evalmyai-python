@@ -9,7 +9,7 @@ editor: visual
 The evalmy.ai client library requires python 3.8 or higher.
 
 ```shell
-python -m pip install evalmyai-python
+python -m pip install evalmyai
 ```
 
 ## Simple usage
