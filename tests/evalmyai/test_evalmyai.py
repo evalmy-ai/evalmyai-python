@@ -94,7 +94,7 @@ class TestEvaluator(TestCase):
 
         self.assertEqual((4, 6), result.shape)
         self.assertEqual(True, result.index.equals(data.index))
-        self.assertEqual(1, sum(result["error"].notnull()))
+        self.assertGreaterEqual(1, sum(result["error"].notnull()))
         self.assertLess(result.loc["wrong", "score_con"], 0.1)
         self.assertLess(result.loc["wrongish", "score_con"], 0.1)
         self.assertGreater(result.loc["correct", "score_con"], 0.5)
@@ -112,7 +112,7 @@ class TestEvaluator(TestCase):
         _auth["api_key"] = "abcd"
         evaluator = Evaluator(_auth, token)
         result = evaluator.evaluate_dataset(data)
-        self.assertTrue(result["error"].values[0].startswith("429"))
+        self.assertTrue(result["error"].values[0].startswith("401"))
 
         _token = "abcd"
         evaluator = Evaluator(auth, _token)

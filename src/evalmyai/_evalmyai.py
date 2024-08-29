@@ -308,8 +308,7 @@ class Evaluator:
                 except requests.exceptions.HTTPError as e:
                     res_item["error"] = OrderedDict(
                         code=e.response.status_code,
-                        text=str(e),
-                        detail=json.loads(e.response.text)["detail"],
+                        text=str(e)
                     )
                 except Exception as e:
                     res_item["error"] = str(e)
