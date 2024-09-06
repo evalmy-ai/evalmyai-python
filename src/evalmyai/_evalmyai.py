@@ -12,8 +12,9 @@ from evalmyai._validators import (
 )
 from evalmyai._utils import order_output_dict, order_contradictions
 
-SYMBOLS = ["contradictions"]
-SYMBOLS_VERSION = {"contradictions": "1"}
+SYMBOLS = ["contradictions", "missing_facts"]
+DEFAULT_SYMBOLS = [SYMBOLS[0]]
+SYMBOLS_VERSION = {"contradictions": "1", "missing_facts": "1"}
 
 # The web address of the evalmy.ai web services.
 URL_HOST = "https://evalmy.ai"
@@ -22,6 +23,12 @@ URL_EVAL = f"{URL_API}/symbol/evaluate"
 
 DEFAULT_SCORING = {
     "contradictions": {
+        "name": "linear",
+        "params": {
+            "weights": {"critical": 1, "large": 0.5, "small": 0.1, "negligible": 0}
+        },
+    },
+    "missing_facts": {
         "name": "linear",
         "params": {
             "weights": {"critical": 1, "large": 0.5, "small": 0.1, "negligible": 0}
@@ -94,7 +101,7 @@ class Evaluator:
     def evaluate(
         self,
         data: dict,
-        symbols: list = SYMBOLS,
+        symbols: list = DEFAULT_SYMBOLS,
         scoring: dict = None,
         retry_cnt: int = 1,
     ) -> OrderedDict:
@@ -103,7 +110,7 @@ class Evaluator:
 
         Args:
             data (dict): A dictionary with textual keys "expected", "actual", and "context".
-            symbols (list, optional): A list of symbols to be evaluated. Defaults to SYMBOLS.
+            symbols (list, optional): A list of symbols to be evaluated. Defaults to ["contradictions"].
             scoring (dict, optional): The scoring criteria. If not set, default from `self.scoring` is used.
             retry_cnt (int, optional): Number of times to retry evaluation in case of server errors. Defaults to 1.
 
@@ -116,14 +123,18 @@ class Evaluator:
         if "context" not in data:
             data["context"] = ""
 
+        if not set(symbols) <= set(SYMBOLS):
+            raise ValueError(f"Wrong symbols value. Should be subset of {SYMBOLS}")
+
         if not scoring:
             scoring = self.scoring
+        else:
+            for symbol in symbols:
+                if symbol in scoring and scoring[symbol] is None:
+                    scoring[symbol] = self.scoring[symbol]
 
         if not (v := validate_single_input_data(data))[0]:
             raise ValueError(f"Wrong input data format with msg: {v[1]}.")
-
-        if not set(symbols) <= set(SYMBOLS):
-            raise ValueError(f"Wrong symbols value. Should be subset of {SYMBOLS}")
 
         result = OrderedDict()
 
@@ -168,7 +179,7 @@ class Evaluator:
     def evaluate_batch(
         self,
         data: list,
-        symbols: list = SYMBOLS,
+        symbols: list = DEFAULT_SYMBOLS,
         scoring: dict = None,
         retry_cnt: int = 1,
     ) -> list:
@@ -177,7 +188,7 @@ class Evaluator:
 
         Args:
             data (list): A list with entries for the `evaluate` function.
-            symbols (list, optional): A list of symbols to be evaluated. Defaults to SYMBOLS.
+            symbols (list, optional): A list of symbols to be evaluated. Defaults to ["contradictions"].
             scoring (dict, optional): Scoring criteria. If not set, default from `self.scoring` is used.
             retry_cnt (int, optional): Number of times to retry evaluation in case of server errors. Defaults to 1.
 
@@ -258,12 +269,14 @@ class Evaluator:
             scoring = test_case["scoring"]
             symbols = scoring.keys()
             for symbol in symbols:
-                if not (v := validate_dict(DEFAULT_SCORING[symbol], scoring[symbol]))[
-                    0
-                ]:
-                    raise ValueError(f"Wrong scoring format with msg: {v[1]}.")
+                if scoring[symbol] is not None:
+                    if not (v := validate_dict(DEFAULT_SCORING[symbol], scoring[symbol]))[
+                        0
+                    ]:
+                        raise ValueError(f"Wrong scoring format with msg: {v[1]}.")
         else:
-            symbols = SYMBOLS
+            scoring = None
+            symbols = DEFAULT_SYMBOLS
 
         context = test_case["context"] if "context" in test_case else ""
 
@@ -300,7 +313,7 @@ class Evaluator:
 
             if actual:
                 try:
-                    res = self.evaluate(item, symbols=symbols, retry_cnt=retry_cnt)
+                    res = self.evaluate(item, symbols=symbols, scoring=scoring, retry_cnt=retry_cnt)
                     for symbol in res:
                         res_item[symbol] = order_output_dict(
                             res[symbol], order_contradictions
@@ -323,7 +336,7 @@ class Evaluator:
     def evaluate_dataset(
         self,
         data: pd.DataFrame,
-        symbols: list = SYMBOLS,
+        symbols: list = DEFAULT_SYMBOLS,
         context: str = "",
         retry_cnt: int = 1,
     ) -> pd.DataFrame:
@@ -332,7 +345,7 @@ class Evaluator:
 
         Args:
             data: A DataFrame with string columns 'expected' and 'actual', and optionally 'context'.
-            symbols: A list of symbols to evaluate, defaults to SYMBOLS.
+            symbols: A list of symbols to evaluate, defaults to ["contradictions"].
             context: A general context to precede the context of each row, defaults to an empty string.
             retry_cnt: The number of times to retry the evaluation of a single entry in case of a server error
                 (e.g., GPT capacity issue). Default is 1.

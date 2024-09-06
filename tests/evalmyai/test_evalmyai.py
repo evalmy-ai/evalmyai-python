@@ -92,7 +92,7 @@ class TestEvaluator(TestCase):
 
         result = self.evaluator.evaluate_dataset(data)
 
-        self.assertEqual((4, 6), result.shape)
+        self.assertEqual((4, 8), result.shape)
         self.assertEqual(True, result.index.equals(data.index))
         self.assertGreaterEqual(1, sum(result["error"].notnull()))
         self.assertLess(result.loc["wrong", "score_con"], 0.1)
@@ -132,7 +132,10 @@ class TestEvaluator(TestCase):
                     "expected": "Europe",
                     "actual": "The second smallest continent in the world is Australia.",
                 },
-            ]
+            ],
+            "scoring": {
+                "missing_facts": None
+            }
         }
 
         result = self.evaluator.evaluate_test_case(data)

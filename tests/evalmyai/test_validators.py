@@ -87,11 +87,11 @@ class Test(TestCase):
 
     def test_validate_single_output_score(self):
         res = validate_single_output_score(Test.correct_scoring)
+        print(res[1])
         self.assertEqual(True, res[0])
-        print(res[1])
         res = validate_single_output_score(Test.wrong_scoring_1)
-        self.assertEqual(False, res[0])
         print(res[1])
+        self.assertEqual(False, res[0])
         res = validate_single_output_score(Test.wrong_scoring_2)
-        self.assertEqual(False, res[0])
         print(res[1])
+        self.assertEqual(False, res[0])
