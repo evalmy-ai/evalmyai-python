@@ -47,6 +47,14 @@ STRUCT_SINGLE_OUTPUT_DATA = {
                 {"reasoning": "string", "summary": "string", "severity": "string"}
             ]
         },
+    },
+    "missing_facts": {
+        "score": 1.0,
+        "reasoning": {
+            "statements": [
+                {"reasoning": "string", "summary": "string", "severity": "string"}
+            ]
+        },
     }
 }
 
@@ -93,7 +101,12 @@ def validate_single_output_score(score: dict) -> bool:
     Returns:
         bool: True if the output score data is valid, False otherwise.
     """
-    return check_structure(STRUCT_SINGLE_OUTPUT_DATA, score)
+
+    for symbol in score.keys():
+        if symbol not in STRUCT_SINGLE_OUTPUT_DATA.keys():
+            return False, f"'{symbol}' is not valid symbol."
+        else:
+            return check_structure(STRUCT_SINGLE_OUTPUT_DATA[symbol], score[symbol])
 
 
 def validate_test_case_data(test_case: dict) -> bool:
