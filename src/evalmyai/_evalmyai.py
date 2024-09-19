@@ -12,9 +12,9 @@ from evalmyai._validators import (
 )
 from evalmyai._utils import order_output_dict, order_contradictions
 
-SYMBOLS = ["contradictions", "missing_facts"]
+SYMBOLS = ["contradictions", "missing_facts", "f1"]
 DEFAULT_SYMBOLS = [SYMBOLS[0]]
-SYMBOLS_VERSION = {"contradictions": "1", "missing_facts": "1"}
+SYMBOLS_VERSION = {"contradictions": "1", "missing_facts": "1", "f1": "1"}
 
 # The web address of the evalmy.ai web services.
 URL_HOST = "https://evalmy.ai"
@@ -29,6 +29,12 @@ DEFAULT_SCORING = {
         },
     },
     "missing_facts": {
+        "name": "linear",
+        "params": {
+            "weights": {"critical": 1, "large": 0.5, "small": 0.1, "negligible": 0}
+        },
+    },
+    "f1": {
         "name": "linear",
         "params": {
             "weights": {"critical": 1, "large": 0.5, "small": 0.1, "negligible": 0}
