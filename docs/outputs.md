@@ -30,7 +30,7 @@
     "reasoning": {
       "statements": [
         {
-          "side": "str, one of both, first, second",
+          "occurrence": "str, one of both, 1, 2",
           "severity": "str, one of critical, large, small, negligible",
           "reasoning": "str",
           "summary": "str"
