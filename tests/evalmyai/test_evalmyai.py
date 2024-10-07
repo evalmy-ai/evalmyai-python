@@ -50,7 +50,7 @@ class TestEvaluator(TestCase):
 
         result = self.evaluator.evaluate(data)
 
-        self.assertLess(result["contradictions"]["score"], 0.1)
+        self.assertLess(result["contradictions"]["scores"]["score"], 0.1)
 
     def test_evaluate_batch(self):
         data = [
@@ -76,9 +76,9 @@ class TestEvaluator(TestCase):
         print(results)
         print(errors)
 
-        self.assertLess(results[0]["contradictions"]["score"], 0.1)
-        self.assertLess(results[1]["contradictions"]["score"], 0.5)
-        self.assertGreater(results[2]["contradictions"]["score"], 0.5)
+        self.assertLess(results[0]["contradictions"]["scores"]["score"], 0.1)
+        self.assertLess(results[1]["contradictions"]["scores"]["score"], 0.5)
+        self.assertGreater(results[2]["contradictions"]["scores"]["score"], 0.5)
         self.assertEqual(len([e for e in errors if e]), 1)
 
     def test_evaluate_dataset(self):
@@ -91,15 +91,15 @@ class TestEvaluator(TestCase):
         )
 
         result = self.evaluator.evaluate_dataset(data)
+        print(result)
 
-        self.assertEqual((4, 8), result.shape)
+        self.assertEqual((4, 6), result.shape)
         self.assertEqual(True, result.index.equals(data.index))
         self.assertGreaterEqual(1, sum(result["error"].notnull()))
         self.assertLess(result.loc["wrong", "score_con"], 0.1)
         self.assertLess(result.loc["wrongish", "score_con"], 0.1)
         self.assertGreater(result.loc["correct", "score_con"], 0.5)
 
-        print(result)
 
     def test_evaluate_dataset_with_error(self):
 

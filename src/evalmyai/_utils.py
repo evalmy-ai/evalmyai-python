@@ -1,7 +1,14 @@
 from collections import OrderedDict
 
 order_contradictions = OrderedDict(
-    score=None,
+    scores=OrderedDict(score=None),
+    reasoning=OrderedDict(
+        statements=OrderedDict(severity=None, summary=None, reasoning=None)
+    ),
+)
+
+order_f1 = OrderedDict(
+    scores=OrderedDict(OrderedDict(f1=None, correctness=None, completeness=None)),
     reasoning=OrderedDict(
         statements=OrderedDict(severity=None, summary=None, reasoning=None)
     ),

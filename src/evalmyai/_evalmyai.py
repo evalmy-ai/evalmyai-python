@@ -10,7 +10,7 @@ from evalmyai._validators import (
     validate_single_output_score,
     validate_test_case_data,
 )
-from evalmyai._utils import order_output_dict, order_contradictions
+from evalmyai._utils import order_output_dict, order_contradictions, order_f1
 
 SYMBOLS = ["contradictions", "missing_facts", "f1"]
 DEFAULT_SYMBOLS = [SYMBOLS[0]]
@@ -165,13 +165,13 @@ class Evaluator:
                     res = response.json()
 
                     if (
-                        "score" not in res or res["score"] is None
+                        "scores" not in res or res["scores"] is None
                     ) and i == retry_cnt - 1:
                         raise BaseException(res["reasoning"])
 
                     res["reasoning"] = json.loads(res["reasoning"])
                     del res["call_outputs"]
-                    result[symbol] = order_output_dict(res, order_contradictions)
+                    result[symbol] = order_output_dict(res, order_f1 if symbol == "f1" else order_contradictions) # TBD!
                     break
 
                 elif i == retry_cnt - 1:
@@ -393,7 +393,7 @@ class Evaluator:
                     retry_cnt=retry_cnt,
                 )
                 for symbol in res:
-                    scores[symbol].append(res[symbol]["score"])
+                    scores[symbol].append(res[symbol]["scores"]["score"])
                     reasons[symbol].append(res[symbol]["reasoning"])
                 errors.append(None)
             except requests.exceptions.HTTPError as e:
