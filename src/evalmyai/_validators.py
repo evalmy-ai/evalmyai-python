@@ -41,7 +41,7 @@ STRUCT_SINGLE_INPUT_DATA = {
 
 STRUCT_SINGLE_OUTPUT_DATA = {
     "contradictions": {
-        "score": 1.0,
+        "scores": {"score": 1.0},
         "reasoning": {
             "statements": [
                 {"reasoning": "string", "summary": "string", "severity": "string"}
@@ -49,13 +49,21 @@ STRUCT_SINGLE_OUTPUT_DATA = {
         },
     },
     "missing_facts": {
-        "score": 1.0,
+        "scores": {"score": 1.0},
         "reasoning": {
             "statements": [
                 {"reasoning": "string", "summary": "string", "severity": "string"}
             ]
         },
-    }
+    },
+    "f1": {
+        "scores": {"f1": 1.00, "correctness": 1.00, "completeness": 1.00},
+        "reasoning": {
+            "statements": [
+                {"reasoning": "string", "summary": "string", "severity": "string"}
+            ]
+        },
+    },
 }
 
 STRUCT_TEST_CASE_DATA = {

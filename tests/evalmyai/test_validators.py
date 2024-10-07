@@ -37,7 +37,7 @@ class Test(TestCase):
 
     correct_scoring = {
         "contradictions": {
-            "score": 1.0,
+            "scores": {"score":1.0},
             "reasoning": {
                 "statements": [
                     {
@@ -52,7 +52,7 @@ class Test(TestCase):
 
     wrong_scoring_1 = {
         "contradictions": {
-            "score": "0",
+            "scores": {"score":"0"},
             "reasoning": {
                 "statements": [
                     {
@@ -67,7 +67,7 @@ class Test(TestCase):
 
     wrong_scoring_2 = {
         "contradictions": {
-            "score": 0.0,
+            "scores": {"score":1.0},
             "reasoning": {
                 "statements": [
                     {
