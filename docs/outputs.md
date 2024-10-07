@@ -5,7 +5,9 @@
 ```json
 {
   "contradiction": {
-    "score": "1.00 # float, 0.0 - 1.0, two decimal digits",
+    "scores": {
+      "score": "1.00 # float, 0.0 - 1.0, two decimal digits"
+    }, 
     "reasoning": {
       "statements": [
         {
@@ -24,9 +26,11 @@
 ```json
 {
   "f1": {
-    "f1-score": "1.00 # float, 0.0 - 1.0, two decimal digits",
-    "correctness": "1.00 # float, 0.0 - 1.0, two decimal digits",
-    "completeness": "1.00 # float, 0.0 - 1.0, two decimal digits",
+    "scores": {
+      "f1": "1.00 # float, 0.0 - 1.0, two decimal digits",
+      "correctness": "1.00 # float, 0.0 - 1.0, two decimal digits",
+      "completeness": "1.00 # float, 0.0 - 1.0, two decimal digits",
+    },
     "reasoning": {
       "statements": [
         {
@@ -46,13 +50,12 @@
 ```json
 {
   "c3-score": {
-    "c3-score": "1.00 # float, 0.0 - 1.0, two decimal digits",
-    "contradiction": {
-      //..., see contradiction
+    "scores": {
+      "c3": "1.00 # float, 0.0 - 1.0, two decimal digits",
+      "f1": "1.00 # float, 0.0 - 1.0, two decimal digits",
+      "correctness": "1.00 # float, 0.0 - 1.0, two decimal digits",
+      "completeness": "1.00 # float, 0.0 - 1.0, two decimal digits",
     },
-    "f1": {
-      //..., see f1
-    }
   }
 }
 ```
