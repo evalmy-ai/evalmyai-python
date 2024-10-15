@@ -1,47 +1,17 @@
 stages:
-  - release
+  - test
 
 variables:
   QUARTO_VERSION: 1.5.53
 
-pages:
-  stage: release
-  image: python:3.11.7
+pytest:
+  stage: test
+  image: python:3.11.8-slim
   before_script:
-    # Download and install Quarto
-    - mkdir -p /opt/quarto/${QUARTO_VERSION}
-    - | 
-      curl -o quarto.tar.gz \
-        -L "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.tar.gz"
-    - |
-      tar -zxvf quarto.tar.gz \
-        -C "/opt/quarto/${QUARTO_VERSION}" \
-        --strip-components=1
-    - rm quarto.tar.gz
-    - ln -s /opt/quarto/${QUARTO_VERSION}/bin/quarto /usr/local/bin/quarto
-    - quarto install tinytex
-    # Check Quarto
-    - quarto check
-    - python -m pip install quartodoc jupyter
-    - python -m pip install .
+    - apt-get update && apt-get install -y git
+    - python -m pip install -r requirements-ci.txt .
   script:
-    - cd docs/ && quartodoc build && quarto render . && cd ..
-    - mv docs/_site public
+    - pytest --junitxml=report.xml tests/
   artifacts:
-    paths:
-      - public
-  only:
-    - main
-
-package:
-  stage: release
-  image: python:3.11.7
-  variables:
-    GIT_STRATEGY: clone  # always clone fresh
-    GIT_DEPTH: 0  # clone with all commits
-  script:
-    - python -m pip install -r "requirements.txt" .
-    - python -m build -sw
-    - python -m twine upload dist/*
-  only:
-    - tags
+    reports:
+      junit: report.xml
