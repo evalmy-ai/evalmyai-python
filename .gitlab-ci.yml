@@ -9,7 +9,7 @@ pytest:
   image: python:3.11.8-slim
   before_script:
     - apt-get update && apt-get install -y git
-    - python -m pip install -r requirements-ci.txt .
+    - python -m pip install -e . && python -m pip install pytest
   script:
     - pytest --junitxml=report.xml tests/
   artifacts:
