@@ -170,7 +170,6 @@ class Evaluator:
                         raise BaseException(res["reasoning"])
 
                     res["reasoning"] = json.loads(res["reasoning"])
-                    del res["call_outputs"]
                     result[symbol] = order_output_dict(res, order_f1 if symbol == "f1" else order_contradictions) # TBD!
                     break
 
