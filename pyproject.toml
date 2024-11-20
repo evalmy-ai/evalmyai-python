@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "evalmyai"
 description = "EVALMY.AI Python library"
 readme = "README.md"
-version = "0.1.0a8"
+version = "0.1.0a9"
 dependencies = [
     "requests",
     "pandas",
@@ -20,6 +20,7 @@ classifiers = [
     "Operating System :: POSIX",
     "Programming Language :: Python :: 3"
 ]
+license = {file = "LICENSE"}
 
 
 [tool.setuptools.packages.find]
