@@ -4,7 +4,7 @@ import os
 
 import pandas as pd
 
-from evalmyai._evalmyai import Evaluator
+from evalmyai._evalmyai import Evaluator, AzureAuth
 
 from dotenv import load_dotenv
 
@@ -100,24 +100,24 @@ class TestEvaluator(TestCase):
         self.assertLess(result.loc["wrongish", "score_con"], 0.1)
         self.assertGreater(result.loc["correct", "score_con"], 0.5)
 
-
     def test_evaluate_dataset_with_error(self):
-
-        data = pd.DataFrame(data={
-            "expected": ["Nehoří!"],
-            "actual": ["Hoří!"]
-        }, index=['wrong'])
-
-        _auth = auth.copy()
-        _auth["api_key"] = "abcd"
+        data = pd.DataFrame(
+            data={"expected": ["Nehoří!"], "actual": ["Hoří!"]}, index=["wrong"]
+        )
+        _auth = AzureAuth(
+            api_key="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+            api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+            azure_deployment=os.getenv("AZURE_DEPLOYMENT_NAME"),
+        )
         evaluator = Evaluator(_auth, token)
         result = evaluator.evaluate_dataset(data)
-        self.assertTrue(result["error"].values[0].startswith("401"))
+        self.assertTrue(result["error"].values[0].startswith("HTTPError: 401 Unauthorized"))
 
-        _token = "abcd"
+        _token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         evaluator = Evaluator(auth, _token)
         result = evaluator.evaluate_dataset(data)
-        self.assertTrue(result["error"].values[0].startswith("401"))
+        self.assertTrue(result["error"].values[0].startswith("HTTPError: 401 Unauthorized"))
 
     def test_evaluate_test_case(self):
         data = {
@@ -133,9 +133,7 @@ class TestEvaluator(TestCase):
                     "actual": "The second smallest continent in the world is Australia.",
                 },
             ],
-            "scoring": {
-                "missing_facts": None
-            }
+            "scoring": {"missing_facts": None},
         }
 
         result = self.evaluator.evaluate_test_case(data)
@@ -153,7 +151,7 @@ class TestEvaluator(TestCase):
             ]
         }
 
-        _token = "abcd"
+        _token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         evaluator = Evaluator(auth, _token)
         result = evaluator.evaluate_test_case(data)
 

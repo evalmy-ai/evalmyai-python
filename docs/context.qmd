@@ -8,12 +8,11 @@ editor: visual
 
 ## Context specification
 
-You can specify the context of the text comparison, such as what matters to you 
-the most and what could rather be ignored.
+You can specify the context of the text comparison, such as what matters to you the most and what could rather be ignored.
 
 To do this, simply add the context into the input data structure.
 
-```python
+``` python
 data = {
     "expected": "There are three apples, seven oranges, and one banana in the basket.",
     "actual":   "In the basket there are thee apples, and four pears.",
@@ -23,35 +22,42 @@ data = {
 
 The result without any context:
 
-```json 
+``` json
 {
-  "score": 0.5,
-  "reasoning": {
-    "statements": [
-      {
-        "reasoning": "The statement from <TEXT 1> lists 'three apples, seven oranges, and one banana' as the contents of the basket. In contrast, <TEXT 2> mentions 'three apples, and four pears' in the basket. There is a direct contradiction regarding the types of fruits and their quantities. <TEXT 1> does not mention pears at all, while <TEXT 2> does not mention the seven oranges and one banana from <TEXT 1>. This is a large contradiction because it involves a significant difference in the facts presented about the basket's contents, which changes the overall context or story of what is in the basket.", 
-        "summary": "Different fruits and quantities in the basket.", 
-        "severity": "large"
-      }
-    ]
-  }
+    "contradictions": {
+        "scores": {
+            "score": 0.5
+        },
+        "reasoning": {
+            "statements": [
+                {
+                    "severity": "large",
+                    "summary": "Different types and counts of fruit in the basket.",
+                    "reasoning": "The statement from <TEXT 1> mentions 'three apples, seven oranges, and one banana' in the basket, while <TEXT 2> states there are 'three apples, and four pears' in the basket. This presents a large contradiction because the types and counts of fruit are significantly different between the two texts. The presence of oranges and a banana in the first text and the mention of pears in the second text, which are not found in the first, changes the overall context of the basket's contents."
+                }
+            ]
+        }
+    }
 }
 ```
 
 The result with context applied:
 
-```json 
+``` json
 {
-  "score": 1.0,
-  "reasoning": {
-    "statements": [
-      {
-        "reasoning": "Both <TEXT 1> and <TEXT 2> state that there are three apples in the basket. Since the context specifies that only information about apples should be considered, the mention of other fruits in both texts is irrelevant. Therefore, there is no contradiction between the texts concerning the number of apples.", 
-        "summary": "No contradiction regarding apples.", 
-        "severity": "negligible"
-      }
-    ]
-  }
+    "contradictions": {
+        "scores": {
+            "score": 1.0
+        },
+        "reasoning": {
+            "statements": [
+                {
+                    "severity": "negligible",
+                    "summary": "The number of apples is consistent.",
+                    "reasoning": "Both <TEXT 1> and <TEXT 2> state that there are three apples in the basket. This information is consistent across both texts, and since the context specifies to focus on apples only, the presence or absence of other fruits mentioned in the texts is irrelevant. Therefore, there are no contradictions regarding the number of apples."
+                }
+            ]
+        }
+    }
 }
 ```
-
