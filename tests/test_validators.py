@@ -6,23 +6,11 @@ from evalmyai._validators import (
 
 
 class Test(TestCase):
+    correct_data = {"expected": "one", "actual": "1", "context": "numerical equality"}
 
-    correct_data = {
-       "expected" : "one",
-       "actual" : "1",
-       "context" : "numerical equality"
-    }
+    wrong_data_1 = {"expected": "one", "actual": 1, "context": "numerical equality"}
 
-    wrong_data_1 = {
-       "expected" : "one",
-       "actual" : 1,
-       "context" : "numerical equality"
-    }
-
-    wrong_data_2 = {
-       "expected" : "one",
-       "context" : "numerical equality"
-    }
+    wrong_data_2 = {"expected": "one", "context": "numerical equality"}
 
     def test_validate_single_input_data(self):
         res = validate_single_input_data(Test.correct_data)
@@ -37,14 +25,10 @@ class Test(TestCase):
 
     correct_scoring = {
         "contradictions": {
-            "scores": {"score":1.0},
+            "scores": {"score": 1.0},
             "reasoning": {
                 "statements": [
-                    {
-                        "reasoning": "seems ok",
-                        "summary": "np",
-                        "severity": "negligible"
-                    }
+                    {"reasoning": "seems ok", "summary": "np", "severity": "negligible"}
                 ]
             },
         }
@@ -52,14 +36,10 @@ class Test(TestCase):
 
     wrong_scoring_1 = {
         "contradictions": {
-            "scores": {"score":"0"},
+            "scores": {"score": "0"},
             "reasoning": {
                 "statements": [
-                    {
-                        "reasoning": "seems wrong",
-                        "summary": "bad",
-                        "severity": "major"
-                    }
+                    {"reasoning": "seems wrong", "summary": "bad", "severity": "major"}
                 ]
             },
         }
@@ -67,19 +47,11 @@ class Test(TestCase):
 
     wrong_scoring_2 = {
         "contradictions": {
-            "scores": {"score":1.0},
+            "scores": {"score": 1.0},
             "reasoning": {
                 "statements": [
-                    {
-                        "reasoning": "seems wrong",
-                        "summary": "bad",
-                        "severity": "minor"
-                    },
-                    {
-                        "reasoning": "seems wrong",
-                        "summary": "bad",
-                        "severity": 17
-                    }
+                    {"reasoning": "seems wrong", "summary": "bad", "severity": "minor"},
+                    {"reasoning": "seems wrong", "summary": "bad", "severity": 17},
                 ]
             },
         }

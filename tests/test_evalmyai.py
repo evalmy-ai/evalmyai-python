@@ -4,20 +4,21 @@ import os
 
 import pandas as pd
 
-from evalmyai._evalmyai import Evaluator
+from evalmyai._evalmyai import Evaluator, AzureAuth
 
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path="../../.env")
 
-auth = {
-    "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
-    "azure_endpoint": os.getenv("AZURE_OPENAI_ENDPOINT"),
-    "api_version": os.getenv("AZURE_OPENAI_API_VERSION"),
-    "azure_deployment": os.getenv("AZURE_DEPLOYMENT_NAME"),
-}
-
-token = os.getenv("EVALMYAI_TOKEN")
+auth = AzureAuth(
+    # TODO REMOVE !!!!!!!!!!!!!!!!!!!!!
+    api_key="cd0fbd8700604f74951145f48aca0101",
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    azure_deployment=os.getenv("AZURE_DEPLOYMENT_NAME"),
+)
+# TODO REMOVE !!!!!!!!!!!!!!!!!!!!!
+token = "323863cb37a79499b0cf147e2bcdda7157d955a059ee1c2d8295cffb108445f2"
 
 
 class TestEvaluator(TestCase):
@@ -100,24 +101,24 @@ class TestEvaluator(TestCase):
         self.assertLess(result.loc["wrongish", "score_con"], 0.1)
         self.assertGreater(result.loc["correct", "score_con"], 0.5)
 
-
     def test_evaluate_dataset_with_error(self):
-
-        data = pd.DataFrame(data={
-            "expected": ["Nehoří!"],
-            "actual": ["Hoří!"]
-        }, index=['wrong'])
-
-        _auth = auth.copy()
-        _auth["api_key"] = "abcd"
+        data = pd.DataFrame(
+            data={"expected": ["Nehoří!"], "actual": ["Hoří!"]}, index=["wrong"]
+        )
+        _auth = AzureAuth(
+            api_key="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+            api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+            azure_deployment=os.getenv("AZURE_DEPLOYMENT_NAME"),
+        )
         evaluator = Evaluator(_auth, token)
         result = evaluator.evaluate_dataset(data)
-        self.assertTrue(result["error"].values[0].startswith("401"))
+        self.assertTrue(result["error"].values[0].startswith("HTTPError: 401 Unauthorized"))
 
-        _token = "abcd"
+        _token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         evaluator = Evaluator(auth, _token)
         result = evaluator.evaluate_dataset(data)
-        self.assertTrue(result["error"].values[0].startswith("401"))
+        self.assertTrue(result["error"].values[0].startswith("HTTPError: 401 Unauthorized"))
 
     def test_evaluate_test_case(self):
         data = {
@@ -133,9 +134,7 @@ class TestEvaluator(TestCase):
                     "actual": "The second smallest continent in the world is Australia.",
                 },
             ],
-            "scoring": {
-                "missing_facts": None
-            }
+            "scoring": {"missing_facts": None},
         }
 
         result = self.evaluator.evaluate_test_case(data)
@@ -153,7 +152,7 @@ class TestEvaluator(TestCase):
             ]
         }
 
-        _token = "abcd"
+        _token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         evaluator = Evaluator(auth, _token)
         result = evaluator.evaluate_test_case(data)
 

@@ -1,5 +1,3 @@
-from evalmyai._evalmyai import Evaluator
+from evalmyai._evalmyai import Evaluator, OpenAIAuth, AzureAuth
 
-__all__ = [
-    "Evaluator"
-]
+__all__ = ["Evaluator", "OpenAIAuth", "AzureAuth"]

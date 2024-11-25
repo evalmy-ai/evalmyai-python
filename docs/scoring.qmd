@@ -18,17 +18,17 @@ For every contradiction found in the texts a **penalty** is applied. The size of
 
 There are four severity categories:
 
-1. **Critical** — Significantly changes the meaning of the text. 
-2. **Large** — Major shift in the meaning of the text. 
-3. **Small** — Minor shift in the meaning of the text. 
-4. **Negligible** — Changes in text with minimal effect on the overall meaning.
+1.  **Critical** — Significantly changes the meaning of the text.
+2.  **Large** — Major shift in the meaning of the text.
+3.  **Small** — Minor shift in the meaning of the text.
+4.  **Negligible** — Changes in text with minimal effect on the overall meaning.
 
-| Severity      |  Expected       | Actual               |
-|---------------|-----------------|----------------------|
-| Critical      | John is older than Jane. | Jane is older than John.                                  |
-| Large         | VW Golf is faster and cheaper than Toyota Corolla.  | VW Golf is faster but more expensive than Toyota Corolla. |
-| Small         | I bought three books, seven envelopes, and a blue pen.                     | I bought three books, seven envelopes, and a blue pencil.                      |                                                           |
-| Negligible         | Da Vinci's is a popular Italian restaurant serving pizza, pasta, and wine. | Da Vinci's is a famous Italian restaurant with great Italian foods and drinks. |                                                           |
+| Severity   | Expected                                                                   | Actual                                                                         |
+|------------|----------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| Critical   | John is older than Jane.                                                   | Jane is older than John.                                                       |
+| Large      | VW Golf is faster and cheaper than Toyota Corolla.                         | VW Golf is faster but more expensive than Toyota Corolla.                      |
+| Small      | I bought three books, seven envelopes, and a blue pen.                     | I bought three books, seven envelopes, and a blue pencil.                      |
+| Negligible | Da Vinci's is a popular Italian restaurant serving pizza, pasta, and wine. | Da Vinci's is a famous Italian restaurant with great Italian foods and drinks. |
 
 : Examples of contradiction severity
 
@@ -52,4 +52,25 @@ DEFAULT_SCORING = {
 }
 ```
 
-Thus, **score = 0.0** is achieved by just one critical contradiction, two large contradictions, or ten small ones. Negligible contradictions do not affect the score at all.
+Thus, **score = 0.0** is achieved by just one critical contradiction, two large contradictions, or ten small ones. Negligible contradictions do not affect the score at all.\
+
+## Modifying default scoring
+
+To modify the scoring system so that only critical severity impacts the score, use this code:
+
+``` python
+scoring = {
+    "contradictions": {
+        "name": "linear",
+        "params": {
+            "weights": {
+                "critical": 1,
+                "large": 0,
+                "small": 0,
+                "negligible": 0
+            }
+        }
+    }
+}
+result = evaluator.evaluate(data,scoring=scoring)
+```

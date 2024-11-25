@@ -8,13 +8,13 @@ editor: visual
 
 The evalmy.ai client library requires python 3.8 or higher.
 
-```shell
+``` shell
 python -m pip install evalmyai
 ```
 
 ## Simple usage
 
-```python
+``` python
 from evalmyai import Evaluator
 
 data = {
@@ -31,17 +31,21 @@ print(result['contradictions'])
 
 The result of the evaluation is as follows:
 
-```json
+``` json
 {
-    "score": 1.0,
-    "reasoning": {
-        "statements": [
-            {
-                "reasoning": "The statement from <TEXT 1> 'Jane is twelve' provides a general age for Jane, while <TEXT 2> 'Jane is 12 yrs, 7 mths and 3 days old' provides a more precise age. There is no contradiction between the two statements, as the second text simply provides more detail on Jane's age, but does not conflict with the first text's assertion that she is twelve years old. The criterion for severity in this context could be based on the impact of the age description on understanding Jane's age. Since both statements agree on Jane being twelve, the severity of the difference in description is negligible.",
-                "summary": "Slight difference in the description of Jane's age.",
-                "severity": "negligible"
-            }
-        ]
+    "contradictions": {
+        "scores": {
+            "score": 1.0
+        },
+        "reasoning": {
+            "statements": [
+                {
+                    "severity": "negligible",
+                    "summary": "Different descriptions of Jane's age.",
+                    "reasoning": "The statement from <TEXT 1> 'Jane is twelve.' is a general statement about Jane's age, indicating that she is twelve years old. The statement from <TEXT 2> 'Jane is 12 yrs, 7 mths and 3 days old.' provides a more precise age, including years, months, and days. There is no contradiction between these statements as the second text simply provides more detail about Jane's age, but does not conflict with the first text's assertion that she is twelve years old."
+                }
+            ]
+        }
     }
 }
 ```
@@ -58,30 +62,44 @@ Due to capacity limits per organization, we cannot provide an GPT endpoint direc
 
 If you use an Azure endpoint, the configuration should look like this:
 
-```python
-token = "YOUR_EVALMYAI_TOKEN"
+``` python
+from evalmyai import AzureAuth, Evaluator
 
-auth_azure = {
-    "api_key": "cd0...101",
-    "azure_endpoint": "https://...azure.com/",
-    "api_version": "2023-07-01-preview",
-    "azure_deployment": "...",
-}
+    token = "YOUR_EVALMYAI_TOKEN" # Replace with your evalmyai token
 
-evaluator = Evaluator(auth_azure, token)
+    # Define the Azure OpenAI authentication details
+    auth_azure = AzureAuth(
+        api_key="cd0...101",               # Replace with your Azure API key
+        azure_endpoint="https://...azure.com/",  # Replace with your Azure endpoint URL
+        api_version="2023-07-01-preview",  # Specify the API version
+        azure_deployment="..."            # Specify the deployment name
+    )
+
+    # Instantiate the Evaluator with the authentication and token
+    evaluator = Evaluator(
+        auth=auth_azure,
+        token=token
+    )
 ```
 
 ### OpenAI
 
 In case you use OpenAI endpoint, the configuration should look like this:
 
-```python
-token = "YOUR_EVALMYAI_TOKEN"
+``` python
+    from evalmyai import OpenAIAuth, Evaluator
 
-auth_open_ai = {
-    "api_key": "...",
-    "model": "gpt-4o" # select your model, we strongly recommend GPT-4.
-}
+    token = "YOUR_EVALMYAI_TOKEN" # Replace with your evalmyai token
 
-evaluator = Evaluator(auth_azure, token)
+    # Define the OpenAI authentication details
+    auth_open_ai = OpenAIAuth(
+        api_key="cd0...101",  # Replace with your OpenAI API key
+        model="gpt-4o"         # Specify the model name, we strongly recommend "gpt-4o"
+    )
+
+    # Instantiate the Evaluator with the authentication and token
+    evaluator = Evaluator(
+        auth=auth_open_ai,
+        token=token
+    )
 ```
