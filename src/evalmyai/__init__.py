@@ -1,5 +1,3 @@
 from evalmyai._evalmyai import Evaluator
 
-__all__ = [
-    "Evaluator"
-]
+__all__ = ["Evaluator"]

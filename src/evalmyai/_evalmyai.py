@@ -39,28 +39,124 @@ DEFAULT_SCORING = {
         "params": {
             "weights": {"critical": 1, "large": 0.5, "small": 0.1, "negligible": 0}
         },
-    }
+    },
 }
 
 
+class OpenAIAuth:
+    """
+    Authentication for OpenAI API.
+
+    Args:
+        api_key (str): API key for OpenAI.
+        model (str): Model name (e.g., 'gpt-4').
+
+    Raises:
+        ValueError: If any input is empty or invalid.
+    """
+
+    def __init__(self, api_key: str, model: str):
+        if not isinstance(api_key, str):
+            raise ValueError("API key must be a valid string.")
+        if len(api_key) == 0:
+            raise ValueError("API key must be a non-empty string.")
+
+        if not isinstance(model, str):
+            raise ValueError("Model name must be a valid string.")
+        if len(model) == 0:
+            raise ValueError("Model name must be a non-empty string.")
+
+        self.api_key = api_key
+        self.model = model
+
+    def to_dict(self) -> dict:
+        """
+        Converts the authentication details to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the OpenAIAuth instance.
+        """
+        return {
+            "api_key": self.api_key,
+            "model": self.model,
+        }
+
+
+class AzureAuth:
+    """
+    Authentication for Azure OpenAI.
+
+    Args:
+        api_key (str): API key for Azure.
+        azure_endpoint (str): Azure endpoint URL.
+        api_version (str): API version (e.g., '2023-07-01-preview').
+        azure_deployment (str): Azure deployment name.
+
+    Raises:
+        ValueError: If any input is empty or invalid.
+    """
+
+    def __init__(
+        self, api_key: str, azure_endpoint: str, api_version: str, azure_deployment: str
+    ):
+        if not isinstance(api_key, str):
+            raise ValueError("API key must be a valid string.")
+        if len(api_key) == 0:
+            raise ValueError("API key must be a non-empty string.")
+
+        if not isinstance(azure_endpoint, str):
+            raise ValueError("Azure endpoint must be a valid string.")
+        if len(azure_endpoint) == 0:
+            raise ValueError("Azure endpoint must be a non-empty string.")
+
+        if not isinstance(api_version, str):
+            raise ValueError("API version must be a valid string.")
+        if len(api_version) == 0:
+            raise ValueError("API version must be a non-empty string.")
+
+        if not isinstance(azure_deployment, str):
+            raise ValueError("Azure deployment name must be a valid string.")
+        if len(azure_deployment) == 0:
+            raise ValueError("Azure deployment name must be a non-empty string.")
+
+        self.api_key = api_key
+        self.azure_endpoint = azure_endpoint
+        self.api_version = api_version
+        self.azure_deployment = azure_deployment
+
+    def to_dict(self) -> dict:
+        """
+        Converts the authentication details to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the AzureAuth instance.
+        """
+        return {
+            "api_key": self.api_key,
+            "azure_endpoint": self.azure_endpoint,
+            "api_version": self.api_version,
+            "azure_deployment": self.azure_deployment,
+        }
 class Evaluator:
     """
     Initializes the Evaluator class to evaluate AI model outputs with evalmyai. See [evalmyai-python](https://github.com/evalmy-ai/evalmyai-python).
 
     Args:
-        auth (dict): Authentication details, either for OpenAI or Azure OpenAI. See [examples](#examples).
+        auth (OpenAIAuth or AzureAuth): Authentication details, either for OpenAI or Azure OpenAI. See [examples](#examples).
         token (str): evalmyai API token.
+    Raises:
+        ValueError: If any input is empty or invalid.
     Examples
     --------
-    
+
     ### OpenAI Example:
     ```{python}
     from evalmyai import Evaluator
 
     token = "YOUR_EVALMYAI_TOKEN"
-    auth_open_ai = {  
+    auth_open_ai = {
         "api_key": "cd0...101",
-        "model": "gpt-4o", 
+        "model": "gpt-4o",
     }
     ev = Evaluator(auth_open_ai, token)
     ```
@@ -80,7 +176,16 @@ class Evaluator:
     ```
 
     """
-    def __init__(self, auth: dict, token: str):
+
+    def __init__(self, auth: OpenAIAuth | AzureAuth, token: str):
+        if not isinstance(auth, (OpenAIAuth, AzureAuth)):
+            raise ValueError("Invalid auth object. Must be OpenAIAuth or AzureAuth.")
+
+        if not isinstance(token, str):
+            raise ValueError("Token must be a valid string.")
+        if len(token) == 0:
+            raise ValueError("Token must be a non-empty string.")
+
         self.auth = auth
         self.token = token
         self.scoring = copy.deepcopy(DEFAULT_SCORING)
@@ -152,7 +257,7 @@ class Evaluator:
                     "n_calls": 1,
                     "agg_method": "mean",
                 },
-                "auth": self.auth,
+                "auth": self.auth.to_dict(),
                 "api_token": self.token,
             }
 
@@ -170,7 +275,9 @@ class Evaluator:
                         raise BaseException(res["reasoning"])
 
                     res["reasoning"] = json.loads(res["reasoning"])
-                    result[symbol] = order_output_dict(res, order_f1 if symbol == "f1" else order_contradictions) # TBD!
+                    result[symbol] = order_output_dict(
+                        res, order_f1 if symbol == "f1" else order_contradictions
+                    )  # TBD!
                     break
 
                 elif i == retry_cnt - 1:
@@ -275,9 +382,9 @@ class Evaluator:
             symbols = scoring.keys()
             for symbol in symbols:
                 if scoring[symbol] is not None:
-                    if not (v := validate_dict(DEFAULT_SCORING[symbol], scoring[symbol]))[
-                        0
-                    ]:
+                    if not (
+                        v := validate_dict(DEFAULT_SCORING[symbol], scoring[symbol])
+                    )[0]:
                         raise ValueError(f"Wrong scoring format with msg: {v[1]}.")
         else:
             scoring = None
@@ -318,15 +425,16 @@ class Evaluator:
 
             if actual:
                 try:
-                    res = self.evaluate(item, symbols=symbols, scoring=scoring, retry_cnt=retry_cnt)
+                    res = self.evaluate(
+                        item, symbols=symbols, scoring=scoring, retry_cnt=retry_cnt
+                    )
                     for symbol in res:
                         res_item[symbol] = order_output_dict(
                             res[symbol], order_contradictions
                         )
                 except requests.exceptions.HTTPError as e:
                     res_item["error"] = OrderedDict(
-                        code=e.response.status_code,
-                        text=str(e)
+                        code=e.response.status_code, text=str(e)
                     )
                 except Exception as e:
                     res_item["error"] = str(e)
