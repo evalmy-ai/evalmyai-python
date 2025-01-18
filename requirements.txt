@@ -3,3 +3,5 @@ pandas
 python-dotenv
 build
 twine
+pytest
+dotenv

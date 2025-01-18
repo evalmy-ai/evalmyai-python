@@ -49,11 +49,11 @@ CONTRADICTIONS IN TEXTS:
 1. Score: 1.0, 
 Reasoning: "Both texts identify the capital of France correctly."
 
-2. Score 0.5,
+2. Score: 0.5,
 Severity: Large
 Reasoning: "Different rivers listed as the three longest." 
 
-3. Score 0.0, 
+3. Score: 0.0, 
 Severity: Critical
 Reasoning: Different continents identified as the second smallest.
 
@@ -89,15 +89,19 @@ The result of the evaluation is as follows:
 
 ```json
 {
-    "score": 1.0,
-    "reasoning": {
-        "statements": [
-            {
-                "reasoning": "The statement from <TEXT 1> 'Jane is twelve' provides a general age for Jane, while <TEXT 2> 'Jane is 12 yrs, 7 mths and 3 days old' provides a more precise age. There is no contradiction between the two statements, as the second text simply provides more detail on Jane's age, but does not conflict with the first text's assertion that she is twelve years old. The criterion for severity in this context could be based on the impact of the age description on understanding Jane's age. Since both statements agree on Jane being twelve, the severity of the difference in description is negligible.",
-                "summary": "Slight difference in the description of Jane's age.",
-                "severity": "negligible"
-            }
-        ]
+    "contradictions": {
+        "scores": {
+            "score": 1.0
+        },
+        "reasoning": {
+            "statements": [
+                {
+                    "severity": "negligible",
+                    "summary": "Different descriptions of Jane's age.",
+                    "reasoning": "The statement from <TEXT 1> 'Jane is twelve.' is a general statement about Jane's age, indicating that she is twelve years old. The statement from <TEXT 2> 'Jane is 12 yrs, 7 mths and 3 days old.' provides a more precise age, including years, months, and days. There is no contradiction between these statements as the second text simply provides more detail about Jane's age, but does not conflict with the first text's assertion that she is twelve years old."
+                }
+            ]
+        }
     }
 }
 ```
