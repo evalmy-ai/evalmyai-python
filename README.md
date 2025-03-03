@@ -121,7 +121,7 @@ If you use an Azure endpoint, the configuration should look like this:
 ```python
 from evalmyai import AzureAuth, Evaluator
 
-token = "YOUR_EVALMYAI_TOKEN"
+token = "YOUR_EVALMYAI_TOKEN_expected_to_be_64_characters_long_CHANGE_IT!"
 
 auth_azure = AzureAuth(
     api_key="cd0...101",
@@ -140,7 +140,7 @@ In case you use OpenAI endpoint, the configuration should look like this:
 ```python
 from evalmyai import OpenAIAuth, Evaluator
 
-token = "YOUR_EVALMYAI_TOKEN"
+token = "YOUR_EVALMYAI_TOKEN_expected_to_be_64_characters_long_CHANGE_IT!"
 
 auth_open_ai = OpenAIAuth(
     api_key= "...",
