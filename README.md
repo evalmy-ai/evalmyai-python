@@ -119,14 +119,16 @@ Due to capacity limits per organization, we cannot provide an GPT endpoint direc
 If you use an Azure endpoint, the configuration should look like this:
 
 ```python
-token = "YOUR_EVALMYAI_TOKEN"
+from evalmyai import AzureAuth, Evaluator
 
-auth_azure = {
-    "api_key": "cd0...101",
-    "azure_endpoint": "https://...azure.com/",
-    "api_version": "2023-07-01-preview",
-    "azure_deployment": "...",
-}
+token = "YOUR_EVALMYAI_TOKEN_expected_to_be_64_characters_long_CHANGE_IT!"
+
+auth_azure = AzureAuth(
+    api_key="cd0...101",
+    azure_endpoint="https://...azure.com/",
+    api_version="2023-07-01-preview",
+    azure_deployment="...",
+)
 
 ev = Evaluator(auth_azure, token)
 ```
@@ -136,12 +138,14 @@ ev = Evaluator(auth_azure, token)
 In case you use OpenAI endpoint, the configuration should look like this:
 
 ```python
-token = "YOUR_EVALMYAI_TOKEN"
+from evalmyai import OpenAIAuth, Evaluator
 
-auth_open_ai = {
-    "api_key": "...",
-    "model": "gpt-4o" # select your model, we strongly recommend GPT-4.
-}
+token = "YOUR_EVALMYAI_TOKEN_expected_to_be_64_characters_long_CHANGE_IT!"
+
+auth_open_ai = OpenAIAuth(
+    api_key= "...",
+    model= "gpt-4" # select your model, we strongly recommend GPT-4.
+)
 
 ev = Evaluator(auth_open_ai, token)
 ```

@@ -155,7 +155,7 @@ class Evaluator:
     ```{python}
     from evalmyai import OpenAIAuth, Evaluator
 
-    token = "YOUR_EVALMYAI_TOKEN" # Replace with your evalmyai token
+    token = "YOUR_EVALMYAI_TOKEN_expected_to_be_64_characters_long_CHANGE_IT!" # Replace with your evalmyai token
 
     # Define the OpenAI authentication details
     auth_open_ai = OpenAIAuth(
@@ -174,7 +174,7 @@ class Evaluator:
     ```{python}
     from evalmyai import AzureAuth, Evaluator
 
-    token = "YOUR_EVALMYAI_TOKEN" # Replace with your evalmyai token
+    token = "YOUR_EVALMYAI_TOKEN_expected_to_be_64_characters_long_CHANGE_IT!" # Replace with your evalmyai token
 
     # Define the Azure OpenAI authentication details
     auth_azure = AzureAuth(
