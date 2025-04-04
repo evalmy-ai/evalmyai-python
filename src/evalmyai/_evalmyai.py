@@ -524,8 +524,13 @@ class Evaluator:
                     retry_cnt=retry_cnt,
                 )
                 for symbol in res:
-                    scores[symbol].append(res[symbol]["scores"]["score"])
                     reasons[symbol].append(res[symbol]["reasoning"])
+                    if symbol == "f1":
+                        scores[symbol].append({"f1": res[symbol]["scores"]["f1"],
+                                               "correctness": res[symbol]["scores"]["correctness"],
+                                               "completeness": res[symbol]["scores"]["completeness"]})
+                    else:
+                        scores[symbol].append(res[symbol]["scores"]["score"])
                 errors.append(None)
             except requests.exceptions.HTTPError as e:
                 for symbol in symbols:
