@@ -524,18 +524,25 @@ class Evaluator:
                     retry_cnt=retry_cnt,
                 )
                 for symbol in res:
-                    scores[symbol].append(res[symbol]["scores"]["score"])
+                    scores[symbol].append(res[symbol]["scores"])
                     reasons[symbol].append(res[symbol]["reasoning"])
                 errors.append(None)
             except requests.exceptions.HTTPError as e:
                 for symbol in symbols:
-                    scores[symbol].append(float("nan"))
                     reasons[symbol].append("")
+                    if symbol =="f1":
+                        scores[symbol].append(OrderedDict(f1=float("nan"), correctness=float("nan"), completeness=float("nan")))
+                    else:
+                        scores[symbol].append(OrderedDict(score=float("nan")))
+                        
                 errors.append(str(e) + "\n" + e.response.text)
             except Exception as e:
                 for symbol in symbols:
-                    scores[symbol].append(float("nan"))
                     reasons[symbol].append("")
+                    if symbol =="f1":
+                        scores[symbol].append(OrderedDict(f1=float("nan"), correctness=float("nan"), completeness=float("nan")))
+                    else:
+                        scores[symbol].append(OrderedDict(score=float("nan")))
                 errors.append(e)
 
         result = {
@@ -545,7 +552,7 @@ class Evaluator:
         }
 
         for symbol in symbols:
-            result[f"score_{symbol[:3]}"] = scores[symbol]
+            result[f"scores_{symbol[:3]}"] = scores[symbol]
 
         for symbol in symbols:
             result[f"reason_{symbol[:3]}"] = reasons[symbol]
